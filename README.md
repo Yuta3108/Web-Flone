@@ -1,2 +1,2 @@
-
-Nhớ npm Install Trước Khi chạy
+1 npm Install
+2 npm run dev 
