@@ -13,13 +13,13 @@ function DangKy() {
           <h2 className="text-2xl font-semibold text-center mb-6">Đăng Ký</h2>
           <form>
             {/* Họ Input */}
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <input
                 type="Họ"
                 placeholder="Họ"
                 className="w-full px-4 py-2 border  rounded-md focus:outline-none focus:ring-2 focus:ring-purple"
               />
-            </div>
+            </div> */}
             {/* Tên Input */}
             <div className="mb-4">
               <input
