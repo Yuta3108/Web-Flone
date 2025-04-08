@@ -4,23 +4,23 @@ const newsData = [
   {
     title: "5 smartphone bán tại Việt Nam tháng 12",
     description: "125 smartphone bán tại Việt Nam tháng 12",
-    image: "public/img/news1.jpg", // Đường dẫn ảnh
+    image: "./img/news1.jpg", // Đường dẫn ảnh
 
   },
   {
     title: "Nhiều người dùng Samsung tại Việt Nam bị khóa máy từ xa",
     description: "",
-    image: "public/img/news2.jpg", // Đường dẫn ảnh
+    image: "./img/news2.jpg", // Đường dẫn ảnh
   },
   {
     title: "Apple bắt đầu phát triển iPhone gập",
     description: "Apple bắt đầu phát triển iPhone gập",
-    image: "public/img/news3.jpg", // Đường dẫn ảnh
+    image: "./img/news3.jpg", // Đường dẫn ảnh
   },
   {
     title: "Huawei Mate X6 phô diễn độ bền và khả năng làm mát",
     description: "",
-    image: "public/img/news4.jpg", // Đường dẫn ảnh
+    image: "./img/news4.jpg", // Đường dẫn ảnh
   },
 ];
 

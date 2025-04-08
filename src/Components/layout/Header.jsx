@@ -54,7 +54,7 @@ function Header() {
       <Link to="/" className="flex items-center space-x-2">
         <img src="public//img/LogoHinh.png" alt="Logo FLONE" className="w-8 h-8" />
         <img
-          src="public/img/LogoChu.png"
+          src="./img/LogoChu.png"
           alt="Logo FLONE"
           className="h-6 hidden md:flex"
         />

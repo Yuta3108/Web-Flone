@@ -7,7 +7,7 @@ const Footer = () => {
         {/* Logo và thông tin liên hệ */}
         <div className="flex flex-col items-center md:items-start">
           <img
-            src="public/img/LogoHinh.png"
+            src="./img/LogoHinh.png"
             alt="Flone Logo"
             className="w-13 h-12 mb-4"
           />
@@ -62,14 +62,14 @@ const Footer = () => {
             <div className="flex justify-center md:justify-start gap-4 mt-2">
               <a href="#" aria-label="Facebook">
                 <img
-                  src="public/img/fb_icon.png"
+                  src="./img/fb_icon.png"
                   alt="Facebook"
                   className="w-7 h-7"
                 />
               </a>
               <a href="#" aria-label="Instagram">
                 <img
-                  src="public/img/instagram.png"
+                  src="./img/instagram.png"
                   alt="Instagram"
                   className="w-7 h-7"
                 />
