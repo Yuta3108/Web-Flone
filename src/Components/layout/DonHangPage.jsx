@@ -10,7 +10,7 @@ const dummyOrders = [
 export default function DonHangPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [orders, setOrders] = useState(dummyOrders);
-  const [editOrder, setEditOrder] = useState(null); // thông tin đơn đang sửa
+  const [editOrder, setEditOrder] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleDelete = (id) => {
@@ -29,37 +29,45 @@ export default function DonHangPage() {
 
   return (
     <div className={`${darkMode ? 'dark' : ''}`}>
-      <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
+      <div className="flex bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen">
         <Sidebar />
         <div className="flex-1">
           <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
           <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">Quản lý đơn hàng</h1>
-            <table className="w-full border">
-              <thead className="bg-blue-600 text-white">
-                <tr>
-                  <th className="p-2">Mã ĐH</th>
-                  <th className="p-2">Khách hàng</th>
-                  <th className="p-2">Tổng tiền</th>
-                  <th className="p-2">Hành động</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map(order => (
-                  <tr key={order.id} className="text-center border-b">
-                    <td className="p-2">{order.id}</td>
-                    <td className="p-2">{order.customer}</td>
-                    <td className="p-2">{order.total.toLocaleString()} đ</td>
-                    <td className="p-2 space-x-2">
-                      <button onClick={() => handleEdit(order)} className="bg-yellow-500 px-3 py-1 text-white rounded">Sửa</button>
-                      <button onClick={() => handleDelete(order.id)} className="bg-red-500 px-3 py-1 text-white rounded">Xóa</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
 
-            {/* Modal chỉnh sửa đơn hàng */}
+            <div className="overflow-x-auto rounded shadow border dark:border-gray-700 bg-white dark:bg-gray-800">
+              <table className="w-full border-collapse">
+                <thead className="bg-blue-600 text-white">
+                  <tr>
+                    <th className="p-3 text-left">Mã ĐH</th>
+                    <th className="p-3 text-left">Khách hàng</th>
+                    <th className="p-3 text-left">Tổng tiền</th>
+                    <th className="p-3 text-left">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map(order => (
+                    <tr key={order.id} className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <td className="p-3">{order.id}</td>
+                      <td className="p-3">{order.customer}</td>
+                      <td className="p-3">{order.total.toLocaleString()} đ</td>
+                      <td className="p-3 space-x-2">
+                        <button onClick={() => handleEdit(order)} className="text-yellow-500">Sửa</button>
+                        <button onClick={() => handleDelete(order.id)} className="text-red-500">Xóa</button>
+                      </td>
+                    </tr>
+                  ))}
+                  {orders.length === 0 && (
+                    <tr>
+                      <td colSpan={4} className="text-center p-4 text-gray-600 dark:text-gray-300">Không có đơn hàng nào.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Modal chỉnh sửa */}
             {modalOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                 <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
@@ -69,14 +77,14 @@ export default function DonHangPage() {
                     placeholder="Tên khách hàng"
                     value={editOrder.customer}
                     onChange={(e) => setEditOrder({ ...editOrder, customer: e.target.value })}
-                    className="w-full p-2 mb-3 border rounded"
+                    className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
                   />
                   <input
                     type="number"
                     placeholder="Tổng tiền"
                     value={editOrder.total}
                     onChange={(e) => setEditOrder({ ...editOrder, total: Number(e.target.value) })}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-2 mb-4 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
                   />
                   <div className="flex justify-end space-x-2">
                     <button onClick={() => setModalOpen(false)} className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">Hủy</button>
@@ -85,7 +93,6 @@ export default function DonHangPage() {
                 </div>
               </div>
             )}
-
           </div>
         </div>
       </div>
