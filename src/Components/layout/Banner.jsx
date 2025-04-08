@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 
 // Dữ liệu ảnh
 const imageList = [
-  { src: "public/img/BannerTest.png", alt: "Banner Test" },
-  { src: "public/img/banner.jpg", alt: "Banner Example" },
-  { src: "public/img/banner1.jpg", alt: "Banner Sample" },
-  { src: "public/img/banner2.jpg", alt: "Banner Sample" }, 
+  { src: "./img/BannerTest.png", alt: "Banner Test" },
+  { src: "./img/banner.jpg", alt: "Banner Example" },
+  { src: "./img/banner1.jpg", alt: "Banner Sample" },
+  { src: "./img/banner2.jpg", alt: "Banner Sample" }, 
 ];
 
 function Banner() {

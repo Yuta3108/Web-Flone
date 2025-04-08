@@ -69,7 +69,7 @@ function DangKy() {
               className="flex items-center gap-3 justify-center shadow-md p-3 rounded-md bg-white text-black"
             >
               <img
-                src="public/img/gg_icon.png"
+                src="./img/gg_icon.png"
                 height={24}
                 width={24}
                 alt="Google Logo"
@@ -82,7 +82,7 @@ function DangKy() {
               className="flex items-center gap-3 justify-center shadow-md p-3 rounded-md bg-white text-black"
             >
               <img
-                src="public/img/twitter_icon.png"
+                src="./img/twitter_icon.png"
                 height={24}
                 width={24}
                 alt="Twitter Logo"
