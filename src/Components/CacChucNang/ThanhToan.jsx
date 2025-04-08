@@ -113,7 +113,7 @@ function ThanhToan() {
               className="border w-full px-4 py-2 rounded-md"
               onChange={handleChange}
             />
-            {errors.name && <p className="text-red">{errors.name}</p>}
+            {errors.name && <p className="text-red-600">{errors.name}</p>}
           </div>
           <div className="mb-4">
             <label className="block font-semibold mb-2">Email</label>
@@ -123,7 +123,7 @@ function ThanhToan() {
               className="border w-full px-4 py-2 rounded-md"
               onChange={handleChange}
             />
-            {errors.email && <p className="text-red">{errors.email}</p>}
+            {errors.email && <p className="text-red-600">{errors.email}</p>}
           </div>
           <div className="mb-4">
             <label className="block font-semibold mb-2">Địa Chỉ</label>
@@ -133,7 +133,7 @@ function ThanhToan() {
               className="border w-full px-4 py-2 rounded-md"
               onChange={handleChange}
             />
-            {errors.address && <p className="text-red">{errors.address}</p>}
+            {errors.address && <p className="text-red-600">{errors.address}</p>}
           </div>
           <div className="mb-4">
             <label className="block font-semibold mb-2">Số Điện Thoại</label>
@@ -143,7 +143,7 @@ function ThanhToan() {
               className="border w-full px-4 py-2 rounded-md"
               onChange={handleChange}
             />
-            {errors.phone && <p className="text-red">{errors.phone}</p>}
+            {errors.phone && <p className="text-red-600">{errors.phone}</p>}
           </div>
           <div className="bg-white p-4 rounded-lg shadow-lg mb-4">
             <h3 className="text-xl font-bold mb-2">Giỏ hàng của bạn</h3>
@@ -163,7 +163,7 @@ function ThanhToan() {
                   ))}
                 </ul>
 
-                <div className="mt-4 text-xl font-semibold text-red flex justify-between">
+                <div className="mt-4 text-xl font-semibold text-red-600 flex justify-between">
                   <span>Tổng tiền:</span>
                   <span>{calculateTotalPrice().toLocaleString()} VND</span>
                 </div>

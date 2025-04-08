@@ -71,7 +71,7 @@ function List() {
               <div className="text-sm font-medium">
                 {phone.TenSp || "Tên sản phẩm"}
               </div>
-              <div className="text-red font-semibold mt-2">
+              <div className="text-red-600 font-semibold mt-2">
                 Giá:{" "}
                 {phone.Gia
                   ? `${new Intl.NumberFormat("vi-VN").format(phone.Gia)} VND`

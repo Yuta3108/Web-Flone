@@ -61,7 +61,7 @@ function SearchResultModal({ results = [], onClose }) {
                                   <div className="text-sm font-medium text-center">
                                       {product.TenSp || "Tên sản phẩm"}
                                   </div>
-                                  <div className="text-red font-semibold mt-2 text-center">
+                                  <div className="text-red-600 font-semibold mt-2 text-center">
                                       Giá: {product.Gia ? `${new Intl.NumberFormat('vi-VN').format(product.Gia)} VND` : "Liên hệ"}
                                   </div>
                                   <button

@@ -60,7 +60,7 @@ function GioHang() {
             {cartItems.length === 0 ? (
               <div className="text-center text-black">
                 Giỏ Hàng của bạn hiện tại đang trống.{" "}
-                <Link to="/" className="text-red underline">
+                <Link to="/" className="text-red-600 underline">
                   Tại Đây !
                 </Link>
               </div>
@@ -69,15 +69,15 @@ function GioHang() {
                 <div key={item.MaSanPham} className="mb-4 flex justify-between items-center">
                   <div className="flex-1">
                     <span>{item.TenSp}</span>
-                    <div className="text-red">
+                    <div className="text-red-600-600">
                       {item.quantity} x {item.Gia ? `${new Intl.NumberFormat('vi-VN').format(item.Gia)} VND` : "Liên hệ"}
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <button onClick={() => handleDecreaseQuantity(item.MaSanPham)} className="text-red">Giảm</button>
+                    <button onClick={() => handleDecreaseQuantity(item.MaSanPham)} className="text-red-600">Giảm</button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => handleIncreaseQuantity(item.MaSanPham)} className="text-red">Tăng</button>
-                    <button onClick={() => handleRemoveItem(item.MaSanPham)} className="text-red">Xóa</button>
+                    <button onClick={() => handleIncreaseQuantity(item.MaSanPham)} className="text-red-600">Tăng</button>
+                    <button onClick={() => handleRemoveItem(item.MaSanPham)} className="text-red-600">Xóa</button>
                   </div>
                 </div>
               ))
@@ -88,7 +88,7 @@ function GioHang() {
             <h2 className="text-xl font-bold mb-4 border-b pb-2">Thông Tin Đơn Hàng</h2>
             <div className="flex justify-between text-gray-500">
               <span>Tổng Tiền</span>
-              <span className="text-red font-bold">
+              <span className="text-red-600 font-bold">
                 {calculateTotalPrice() > 0
                   ? calculateTotalPrice().toLocaleString()
                   : "0"}{" "}
