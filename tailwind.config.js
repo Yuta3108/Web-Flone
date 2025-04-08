@@ -14,7 +14,6 @@ export default {
     transparent: 'transparent',
     current: 'currentColor',
     white: '#ffffff',
-    // ✅ không ghi đè màu mặc định
     'purple-custom': '#3f3cbb',
     'gray-custom': '#D9D9D9D9',
     'blue-custom': '#0771Fc',
@@ -25,7 +24,7 @@ export default {
     },
     extend: {
       backgroundImage: {
-        'bg-test':"url('/src/img/bgtest.jpg')"
+        'bg-test':"url('public/img/bgtest.jpg')"
       },
     },
     screens: {
