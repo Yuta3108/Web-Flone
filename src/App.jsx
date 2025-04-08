@@ -7,6 +7,9 @@ import ThanhToan from './Components/CacChucNang/ThanhToan'
 import Trangchu from './Components/layout/TrangChu'
 import ChitietSanPham from './Components/CacChucNang/ChiTietSanPham'
 import AdminDashboard from './Components/layout/Dashboard'
+import SanPhamPage from './Components/layout/SanPhamPage'
+import DonHangPage from './Components/layout/DonHangPage'
+import KhachHangPage from './Components/layout/KhachHangPage'
 function App() {
   return (
     <>
@@ -19,6 +22,9 @@ function App() {
           <Route path='/thanhtoan' element={<ThanhToan/>}/>
           <Route path="/product/:id" element={<ChitietSanPham />} />
           <Route path="/dashboard" element={<AdminDashboard />} />
+          <Route path="/dashboard/sanpham" element={<SanPhamPage />} />
+          <Route path="/dashboard/donhang" element={<DonHangPage />} />
+          <Route path="/dashboard/khachhang" element={<KhachHangPage />} />
         </Routes>
       </div>
     </>
