@@ -24,7 +24,7 @@ export default {
     },
     extend: {
       backgroundImage: {
-        'bg-test':"url('/src/img/bgtest.jpg')"
+        'bg-test':"url('public/img/bgtest.jpg')"
       },
     },
     screens: {

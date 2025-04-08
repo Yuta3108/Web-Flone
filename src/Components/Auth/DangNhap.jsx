@@ -48,7 +48,7 @@ function DangNhap() {
               className="flex items-center gap-3 justify-center shadow-md p-3 rounded-md bg-white text-black"
             >
               <img
-                src="./src/img/gg_icon.png"
+                src="public/img/gg_icon.png"
                 height={24}
                 width={24}
                 alt="Google Logo"
@@ -61,7 +61,7 @@ function DangNhap() {
               className="flex items-center gap-3 justify-center shadow-md p-3 rounded-md bg-white text-black"
             >
               <img
-                src="./src/img/twitter_icon.png"
+                src="public/img/twitter_icon.png"
                 height={24}
                 width={24}
                 alt="Twitter Logo"
