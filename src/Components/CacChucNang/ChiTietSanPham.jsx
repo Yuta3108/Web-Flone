@@ -12,11 +12,11 @@ function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/chitietsanpham/${id}`)
+    fetch(`/api/chitietsanpham/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
-        setSelectedImage(data.img1 || "default.jpg"); // Kiểm tra nếu không có ảnh
+        setSelectedImage(data.img1 || "default.jpg");
         setLoading(false);
       })
       .catch((err) => {
@@ -24,6 +24,7 @@ function ProductDetail() {
         setLoading(false);
       });
   }, [id]);
+  
 
   if (loading) {
     return <div className="text-center text-lg py-6">Đang tải sản phẩm...</div>;
