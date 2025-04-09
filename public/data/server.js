@@ -118,27 +118,7 @@ app.get("/chitietsanpham/:ma_san_pham", async (req, res) => {
     return res.status(500).json({ message: "Lỗi server!", error: err });
   }
 });
-// app.post('/khachhang', async (req, res) => {
-//   const { TenKhachHang, DiaChi, Sdt, Email } = req.body;
 
-//   if (!TenKhachHang || !DiaChi || !Sdt || !Email) {
-//     return res.status(400).json({ message: 'Dữ liệu không hợp lệ' });
-//   }
-//   try {
-//     const sql = 'INSERT INTO khachhang (ten_khach_hang, dia_chi, sdt, email) VALUES (?, ?, ?, ?)';
-//     // Sử dụng async/await để tránh callback hell
-//     const [result] = await db.query(sql, [TenKhachHang, DiaChi, Sdt, Email]);
-//     res.status(201).json({
-//       message: 'Khách hàng đã được thêm thành công',
-//       id: result.insertId
-//     });
-
-//   } catch (err) {
-//     console.error(' Lỗi khi thêm khách hàng:', err);
-//     res.status(500).json({ message: 'Lỗi server', error: err.sqlMessage });
-//   }
-// });
-// Khởi động server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(` Server chạy tại http://localhost:${PORT}`);
