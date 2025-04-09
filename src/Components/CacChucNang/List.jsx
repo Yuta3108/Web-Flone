@@ -87,7 +87,7 @@ function List() {
               }}
               className="mt-auto px-4 py-2 bg-gradient-to-t from-Purple-dark from-5% via-Purple-C via-30% to-Purple-L text-white rounded-md hover:bg-Purple-dark w-full"
             >
-              Thêm vào giỏ Hàng
+              Thêm vào giỏ
             </button>
           </div>
         ))}
