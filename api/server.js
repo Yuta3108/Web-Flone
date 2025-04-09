@@ -40,12 +40,14 @@ const db = mysql.createPool({
 })();
 
 // Route test
-app.get("/message", (req, res) => {
+
+app.get("/api/message", (req, res) => {
+
   res.json({ message: "Server đang hoạt động!" });
 });
 
 // API lấy danh sách sản phẩm
-app.get("/phones", async (req, res) => {
+app.get("/api/phones", async (req, res) => {
   try {
     const [results] = await db.query("SELECT * FROM sanpham");
     res.json(results);
@@ -56,7 +58,7 @@ app.get("/phones", async (req, res) => {
 });
 
 // API tìm kiếm sản phẩm theo điều kiện
-app.get("/phones1", async (req, res) => {
+app.get("/api/phones1", async (req, res) => {
   const { search, category, minPrice, maxPrice } = req.query;
 
   try {
@@ -89,7 +91,9 @@ app.get("/phones1", async (req, res) => {
 });
 
 // API chi tiết sản phẩm
-app.get("/chitietsanpham/:ma_san_pham", async (req, res) => {
+
+app.get("/api/chitietsanpham/:ma_san_pham", async (req, res) => {
+
   const productId = Number(req.params.ma_san_pham);
   if (isNaN(productId)) {
     return res.status(400).json({ message: "Giá trị ma_san_pham không hợp lệ!" });

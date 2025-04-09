@@ -11,13 +11,13 @@ export default defineConfig(({ mode }) => ({
       '/api': {
         target: 'http://localhost:5000', 
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+  
       },
     },
   },
   define: {
     'process.env': {
-      API_BASE_URL: mode === 'production' ? '/api' : 'http://localhost:5000',
+      API_BASE_URL: mode === 'production' ? '/api' : '/api', 
     },
   },
   build: {
