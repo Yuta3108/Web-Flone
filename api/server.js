@@ -40,7 +40,9 @@ const db = mysql.createPool({
 })();
 
 // Route test
+
 app.get("/api/message", (req, res) => {
+
   res.json({ message: "Server đang hoạt động!" });
 });
 
@@ -89,7 +91,9 @@ app.get("/api/phones1", async (req, res) => {
 });
 
 // API chi tiết sản phẩm
+
 app.get("/api/chitietsanpham/:ma_san_pham", async (req, res) => {
+
   const productId = Number(req.params.ma_san_pham);
   if (isNaN(productId)) {
     return res.status(400).json({ message: "Giá trị ma_san_pham không hợp lệ!" });
