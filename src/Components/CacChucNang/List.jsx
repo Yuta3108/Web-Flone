@@ -17,12 +17,12 @@ function List() {
 
   // Hàm thêm sản phẩm vào giỏ hàng
   const addToCart = (phone) => {
-    const existingProduct = cart.find((item) => item.MaSanPham === phone.MaSanPham);
+    const existingProduct = cart.find((item) => item.ma_san_pham === phone.ma_san_pham);
     let updatedCart;
 
     if (existingProduct) {
       updatedCart = cart.map((item) =>
-        item.MaSanPham === phone.MaSanPham ? { ...item, quantity: item.quantity + 1 } : item
+        item.ma_san_pham === phone.ma_san_pham ? { ...item, quantity: item.quantity + 1 } : item
       );
     } else {
       updatedCart = [...cart, { ...phone, quantity: 1 }];
@@ -30,7 +30,7 @@ function List() {
 
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-    alert(`${phone.TenSp || "Sản phẩm"} đã được thêm vào giỏ hàng!`);
+    alert(`${phone.ten_sp || "Sản phẩm"} đã được thêm vào giỏ hàng!`);
   };
 
   return (
@@ -56,25 +56,25 @@ function List() {
         {phones.map((phone, index) => (
           <div
             key={index}
-            onClick={() => navigate(`/product/${phone.MaSanPham}`)} // Điều hướng đến trang chi tiết sản phẩm
+            onClick={() => navigate(`/product/${phone.ma_san_pham}`)} // Điều hướng đến trang chi tiết sản phẩm
             className="cursor-pointer border rounded-lg p-4 flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl transition-transform duration-200 hover:scale-105"
           >
             {/* Ảnh sản phẩm */}
             <img
-              src={`./public/ImgDT/${phone.IMG}`}
-              alt={phone.TenSp || "Tên sản phẩm"}
+              src={`./public/imgDT/${phone.img}`}
+              alt={phone.ten_sp || "Tên sản phẩm"}
               className="w-24 h-24 object-cover mb-2"
             />
 
             {/* Nội dung sản phẩm */}
             <div className="flex flex-col flex-grow justify-between items-center w-full">
               <div className="text-sm font-medium">
-                {phone.TenSp || "Tên sản phẩm"}
+                {phone.ten_sp || "Tên sản phẩm"}
               </div>
               <div className="text-red font-semibold mt-2">
                 Giá:{" "}
-                {phone.Gia
-                  ? `${new Intl.NumberFormat("vi-VN").format(phone.Gia)} VND`
+                {phone.gia
+                  ? `${new Intl.NumberFormat("vi-VN").format(phone.gia)} VND`
                   : "Liên hệ"}
               </div>
             </div>
