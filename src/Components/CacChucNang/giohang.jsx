@@ -15,23 +15,23 @@ function GioHang() {
     }
   }, []);
 
-  // Tính tổng tiền, kiểm tra nếu giá trị Gia hợp lệ
+  // Tính tổng tiền, kiểm tra nếu giá trị gia hợp lệ
   const calculateTotalPrice = () => {
     return cartItems.reduce((total, item) => {
-      const price = item.Gia || 0; // Đảm bảo Gia có giá trị hợp lệ
+      const price = item.gia || 0; // Đảm bảo gia có giá trị hợp lệ
       return total + price * item.quantity;
     }, 0);
   };
 
   const handleRemoveItem = (itemId) => {
-    const updatedCart = cartItems.filter((item) => item.MaSanPham !== itemId);
+    const updatedCart = cartItems.filter((item) => item.ma_san_pham !== itemId);
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const handleIncreaseQuantity = (itemId) => {
     const updatedCart = cartItems.map((item) =>
-      item.MaSanPham === itemId ? { ...item, quantity: item.quantity + 1 } : item
+      item.ma_san_pham === itemId ? { ...item, quantity: item.quantity + 1 } : item
     );
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
@@ -39,7 +39,7 @@ function GioHang() {
 
   const handleDecreaseQuantity = (itemId) => {
     const updatedCart = cartItems.map((item) =>
-      item.MaSanPham === itemId && item.quantity > 1
+      item.ma_san_pham === itemId && item.quantity > 1
         ? { ...item, quantity: item.quantity - 1 }
         : item
     );
@@ -66,18 +66,18 @@ function GioHang() {
               </div>
             ) : (
               cartItems.map((item) => (
-                <div key={item.MaSanPham} className="mb-4 flex justify-between items-center">
+                <div key={item.ma_san_pham} className="mb-4 flex justify-between items-center">
                   <div className="flex-1">
-                    <span>{item.TenSp}</span>
-                    <div className="text-red-600-600">
-                      {item.quantity} x {item.Gia ? `${new Intl.NumberFormat('vi-VN').format(item.Gia)} VND` : "Liên hệ"}
+                    <span>{item.ten_sp}</span>
+                    <div className="text-red-600">
+                      {item.quantity} x {item.gia ? `${new Intl.NumberFormat('vi-VN').format(item.gia)} VND` : "Liên hệ"}
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <button onClick={() => handleDecreaseQuantity(item.MaSanPham)} className="text-red-600">Giảm</button>
+                    <button onClick={() => handleDecreaseQuantity(item.ma_san_pham)} className="text-red-600">Giảm</button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => handleIncreaseQuantity(item.MaSanPham)} className="text-red-600">Tăng</button>
-                    <button onClick={() => handleRemoveItem(item.MaSanPham)} className="text-red-600">Xóa</button>
+                    <button onClick={() => handleIncreaseQuantity(item.ma_san_pham)} className="text-red-600">Tăng</button>
+                    <button onClick={() => handleRemoveItem(item.ma_san_pham)} className="text-red-600">Xóa</button>
                   </div>
                 </div>
               ))
@@ -98,9 +98,8 @@ function GioHang() {
             <div className="mt-4 text-center">
               <Link
                 to={isTotalZero ? "/giohang" : "/thanhtoan"}
-                className={`w-full py-2 rounded-lg transition block text-center ${
-                  isTotalZero ? "bg-white cursor-not-allowed" : "bg-Purple-dark text-white hover:bg-Purple-light"
-                }`}
+                className={`w-full py-2 rounded-lg transition block text-center ${isTotalZero ? "bg-white cursor-not-allowed" : "bg-Purple-dark text-white hover:bg-Purple-light"
+                  }`}
               >
                 Thanh Toán
               </Link>

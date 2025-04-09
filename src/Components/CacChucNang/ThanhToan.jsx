@@ -67,30 +67,30 @@ function ThanhToan() {
     };
 
     try {
-        console.log("Đang gửi đơn hàng...");
-        const response = await fetch("http://localhost:5000/khachhang", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderData),
-        });
-  
-        const data = await response.json();
-        console.log("Dữ liệu phản hồi:", data);
-  
-        if (response.ok) {
-          console.log("Đặt hàng thành công:", data);
-          setPopupVisible(true); // Hiển thị popup sau khi đặt hàng thành công
-          localStorage.removeItem("cart"); // Xóa giỏ hàng sau khi đặt hàng thành công
-          setCartItems([]); // Xóa các mặt hàng trong giỏ hàng
-        } else {
-          console.error("Lỗi đặt hàng:", data);
-          alert("Đặt hàng thất bại, vui lòng thử lại!");
-        }
-      } catch (error) {
-        console.error("Lỗi khi gửi dữ liệu:", error);
-        alert("Đã xảy ra lỗi, vui lòng thử lại sau!");
+      console.log("Đang gửi đơn hàng...");
+      const response = await fetch("http://localhost:5000/khachhang", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+
+      const data = await response.json();
+      console.log("Dữ liệu phản hồi:", data);
+
+      if (response.ok) {
+        console.log("Đặt hàng thành công:", data);
+        setPopupVisible(true); // Hiển thị popup sau khi đặt hàng thành công
+        localStorage.removeItem("cart"); // Xóa giỏ hàng sau khi đặt hàng thành công
+        setCartItems([]); // Xóa các mặt hàng trong giỏ hàng
+      } else {
+        console.error("Lỗi đặt hàng:", data);
+        alert("Đặt hàng thất bại, vui lòng thử lại!");
       }
-    };
+    } catch (error) {
+      console.error("Lỗi khi gửi dữ liệu:", error);
+      alert("Đã xảy ra lỗi, vui lòng thử lại sau!");
+    }
+  };
 
   return (
     <div>
@@ -157,7 +157,7 @@ function ThanhToan() {
                       key={index}
                       className="border-b py-2 flex justify-between text-black"
                     >
-                      <span>{item.TenSp}</span>
+                      <span>{item.ten_sp}</span>
                       <span>Số Lượng : {item.quantity}</span>
                     </li>
                   ))}
