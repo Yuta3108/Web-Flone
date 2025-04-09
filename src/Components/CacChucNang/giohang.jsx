@@ -68,29 +68,16 @@ function GioHang() {
               cartItems.map((item) => (
                 <div key={item.ma_san_pham} className="mb-4 flex justify-between items-center">
                   <div className="flex-1">
-<<<<<<< HEAD
-                    <span>{item.TenSp}</span>
-                    <div className="text-red-600">
-                      {item.quantity} x {item.Gia ? `${new Intl.NumberFormat('vi-VN').format(item.Gia)} VND` : "Liên hệ"}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <button onClick={() => handleDecreaseQuantity(item.MaSanPham)} className="text-red-600">Giảm</button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => handleIncreaseQuantity(item.MaSanPham)} className="text-red-600">Tăng</button>
-                    <button onClick={() => handleRemoveItem(item.MaSanPham)} className="text-red-600">Xóa</button>
-=======
                     <span>{item.ten_sp}</span>
-                    <div className="text-red">
+                    <div className="text-red-600">
                       {item.quantity} x {item.gia ? `${new Intl.NumberFormat('vi-VN').format(item.gia)} VND` : "Liên hệ"}
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <button onClick={() => handleDecreaseQuantity(item.ma_san_pham)} className="text-red">Giảm</button>
+                    <button onClick={() => handleDecreaseQuantity(item.ma_san_pham)} className="text-red-600">Giảm</button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => handleIncreaseQuantity(item.ma_san_pham)} className="text-red">Tăng</button>
-                    <button onClick={() => handleRemoveItem(item.ma_san_pham)} className="text-red">Xóa</button>
->>>>>>> 9b0a0a79091021fc64d6baaa7474d76537e63186
+                    <button onClick={() => handleIncreaseQuantity(item.ma_san_pham)} className="text-red-600">Tăng</button>
+                    <button onClick={() => handleRemoveItem(item.ma_san_pham)} className="text-red-600">Xóa</button>
                   </div>
                 </div>
               ))

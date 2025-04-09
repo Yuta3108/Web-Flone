@@ -52,9 +52,9 @@ function Header() {
   return (
     <nav className="bg-Purple-dark w-full px-4 md:px-8 flex flex-wrap items-center justify-center py-4 mx-auto gap-7  top-0 left-0 z-30 ">
       <Link to="/" className="flex items-center space-x-2">
-        <img src="./img/LogoHinh.png" alt="Logo FLONE" className="w-8 h-8" />
+        <img src="/img/LogoHinh.png" alt="Logo FLONE" className="w-8 h-8" />
         <img
-          src="./img/LogoChu.png"
+          src="/img/LogoChu.png"
           alt="Logo FLONE"
           className="h-6 hidden md:flex"
         />

@@ -97,7 +97,7 @@ function ProductDetail() {
         {/* Thông tin sản phẩm */}
         <div className="space-y-4">
           <h1 className="text-3xl font-bold text-black">{product.ten_sp}</h1>
-          <p className="text-2xl text-red font-semibold">
+          <p className="text-2xl text-red-600 font-semibold">
             Giá: {new Intl.NumberFormat("vi-VN").format(product.gia)} VND
           </p>
           <p className="line-through text-gray-500 text-lg">
