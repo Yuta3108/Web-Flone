@@ -101,7 +101,7 @@ app.get("/chitietsanpham/:ma_san_pham", async (req, res) => {
     return res.status(400).json({ message: "Giá trị ma_san_pham không hợp lệ!" });
   }
 
-  const sql = "SELECT * FROM chitietsanpham WHERE ma_san_pham = ?";
+  const sql = "SELECT * FROM chitietsanpham join sanpham on chitietsanpham.ma_san_pham=sanpham.ma_san_pham WHERE chitietsanpham.ma_san_pham = ?";
 
   try {
     const [result] = await db.query(sql, [productId]);
