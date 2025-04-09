@@ -69,7 +69,7 @@ function GioHang() {
                 <div key={item.MaSanPham} className="mb-4 flex justify-between items-center">
                   <div className="flex-1">
                     <span>{item.TenSp}</span>
-                    <div className="text-red-600-600">
+                    <div className="text-red-600">
                       {item.quantity} x {item.Gia ? `${new Intl.NumberFormat('vi-VN').format(item.Gia)} VND` : "Liên hệ"}
                     </div>
                   </div>
