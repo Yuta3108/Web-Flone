@@ -7,12 +7,12 @@ function SearchResultModal({ results = [], onClose }) {
 
     // Hàm thêm sản phẩm vào giỏ hàng
     const addToCart = (phone) => {
-        const existingProduct = cart.find((item) => item.MaSanPham === phone.MaSanPham);
+        const existingProduct = cart.find((item) => item.ma_san_pham === phone.ma_san_pham);
 
         let updatedCart;
         if (existingProduct) {
             updatedCart = cart.map((item) =>
-                item.MaSanPham === phone.MaSanPham
+                item.ma_san_pham === phone.ma_san_pham
                     ? { ...item, quantity: item.quantity + 1 }
                     : item
             );
@@ -23,7 +23,7 @@ function SearchResultModal({ results = [], onClose }) {
         setCart(updatedCart);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-        alert(`${phone.TenSp || "Sản phẩm"} đã được thêm vào giỏ hàng!`);
+        alert(`${phone.ten_sp || "Sản phẩm"} đã được thêm vào giỏ hàng!`);
     };
 
     useEffect(() => {
@@ -54,15 +54,15 @@ function SearchResultModal({ results = [], onClose }) {
                                     className="border rounded-lg p-4 flex flex-col items-center transition-transform duration-200 hover:scale-105"
                                 >
                                     <img
-                                        src={`./public/ImgDT/${product.IMG}`} // Lấy ảnh từ database
-                                        alt={product.TenSp || "Sản phẩm"}
+                                        src={`./public/imgDT/${product.img}`} // Lấy ảnh từ database
+                                        alt={product.ten_sp || "Sản phẩm"}
                                         className="w-24 h-24 object-cover mb-2"
                                     />
                                     <div className="text-sm font-medium text-center">
-                                        {product.TenSp || "Tên sản phẩm"}
+                                        {product.ten_sp || "Tên sản phẩm"}
                                     </div>
                                     <div className="text-red font-semibold mt-2 text-center">
-                                        Giá: {product.Gia ? `${new Intl.NumberFormat('vi-VN').format(product.Gia)} VND` : "Liên hệ"}
+                                        Giá: {product.gia ? `${new Intl.NumberFormat('vi-VN').format(product.gia)} VND` : "Liên hệ"}
                                     </div>
                                     <button
                                         onClick={() => addToCart(product)}
