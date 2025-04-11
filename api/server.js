@@ -158,7 +158,6 @@ app.get("/api/chitietsanpham/:ma_san_pham", async (req, res) => {
   
   });
   */
-// ✅ EXPORT: dùng cho Vercel
 export default app;
 
 // ✅ LISTEN: dùng khi chạy local (Node)
