@@ -12,7 +12,7 @@ function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    fetch(`${process.env.API_NODE_URL}/chitietsanpham/${id}`)
+    fetch(`${process.env.REACT_APP_API_NODE_URL}}/chitietsanpham/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
