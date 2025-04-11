@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
-
+import { NODE } from "../../api";
 function ProductDetail() {
   const { id } = useParams(); // Lấy ID sản phẩm từ URL
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_NODE_URL}}/api/chitietsanpham/${id}`)
+    fetch(`${NODE}/api/chitietsanpham/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);

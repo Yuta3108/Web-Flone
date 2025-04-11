@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
 
 // Chỉ load dotenv nếu đang chạy local
+import path from 'path';
+
 if (process.env.NODE_ENV !== 'production') {
-  dotenv.config({ path: '../.env' }); // hoặc '.env' nếu ở root
+  dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 }
 
 import express from "express";

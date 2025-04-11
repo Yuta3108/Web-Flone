@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { NODE } from "../../api";
 function List() {
   const categories = ["Iphone", "Oppo", "Huawei", "SamSung", "Realmi", "Xiaomi", "Vivo"];
   const [phones, setPhones] = useState([]); // Dữ liệu sản phẩm
@@ -9,7 +9,7 @@ function List() {
 
   // Lấy danh sách điện thoại từ server
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_NODE_URL}}/api/phones`)
+    fetch(`${NODE}/api/phones`)
       .then((res) => res.json())
       .then((data) => setPhones(data))
       .catch((err) => console.error("Lỗi lấy dữ liệu:", err));

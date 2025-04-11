@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SearchResultModal from "./SearchResultModal";
-
+import { NODE } from "../../api";
 function Search({ onClose }) {
   const [searchText, setSearchText] = useState("");
   const [category, setCategory] = useState("");
@@ -30,7 +30,7 @@ function Search({ onClose }) {
     const maxPrice = selectedRange.max;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_NODE_URL}}/api/phones1?search=${searchText}&category=${category}&minPrice=${
+      const response = await fetch(`${NODE}}/api/phones1?search=${searchText}&category=${category}&minPrice=${
           minPrice || ""
         }&maxPrice=${maxPrice || ""}`,
         {
