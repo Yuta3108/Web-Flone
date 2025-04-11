@@ -9,7 +9,7 @@ function List() {
 
   // Lấy danh sách điện thoại từ server
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_NODE_URL}}/phones`)
+    fetch(`${process.env.REACT_APP_API_NODE_URL}}/api/phones`)
       .then((res) => res.json())
       .then((data) => setPhones(data))
       .catch((err) => console.error("Lỗi lấy dữ liệu:", err));
