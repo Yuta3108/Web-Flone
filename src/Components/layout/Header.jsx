@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Search from "../CacChucNang/Search";
 import SearchResultModal from "../CacChucNang/SearchResultModal";
-
+import { NODE } from "../../api";
 function Header() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -20,7 +20,7 @@ function Header() {
       console.log("🔍 Từ khóa tìm kiếm:", searchText);
 
       const response = await fetch(
-        `http://localhost:5000/phones1?search=${searchText}`
+        `${NODE}/api/phones1?search=${searchText}`
       );
 
       if (!response.ok) {
@@ -51,7 +51,7 @@ function Header() {
 
   return (
     <nav className="bg-Purple-dark w-full px-4 md:px-8 flex flex-wrap items-center justify-center py-4 mx-auto gap-7  top-0 left-0 z-30 ">
-      <Link to="/" className="flex items-center space-x-2">
+      <Link to="/home" className="flex items-center space-x-2">
         <img src="/img/LogoHinh.png" alt="Logo FLONE" className="w-8 h-8" />
         <img
           src="/img/LogoChu.png"
