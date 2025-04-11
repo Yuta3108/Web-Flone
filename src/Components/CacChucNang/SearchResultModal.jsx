@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { NODE } from "../../api";
 function SearchResultModal({ results = [], onClose }) {
     const [cart, setCart] = useState(() => {
         return JSON.parse(localStorage.getItem("cart")) || [];
@@ -55,7 +55,7 @@ function SearchResultModal({ results = [], onClose }) {
                                     className="border rounded-lg p-4 flex flex-col items-center transition-transform duration-200 hover:scale-105"
                                 >
                                     <img
-                                        src={`/imgDT/${product.img}`} // Lấy ảnh từ database
+                                        src={`${NODE}/ImgDT/${product.img}`}
                                         alt={product.ten_sp || "Sản phẩm"}
                                         className="w-24 h-24 object-cover mb-2"
                                     />
