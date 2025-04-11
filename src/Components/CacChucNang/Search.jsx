@@ -30,7 +30,7 @@ function Search({ onClose }) {
     const maxPrice = selectedRange.max;
 
     try {
-      const response = await fetch(`${process.env.API_BASE_URL}/phones1?search=${searchText}&category=${category}&minPrice=${
+      const response = await fetch(`${process.env.API_NODE_URL}/phones1?search=${searchText}&category=${category}&minPrice=${
           minPrice || ""
         }&maxPrice=${maxPrice || ""}`,
         {
