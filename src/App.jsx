@@ -15,7 +15,7 @@ function App() {
     <>
       <div>
         <Routes>
-          <Route path='/' element={<Trangchu/>}/>
+          <Route path='/home' element={<Trangchu/>}/>
           <Route path='/dangnhap' element={<DangNhap/>}/>
           <Route path='/dangky' element={<DangKy/>}/>
           <Route path='/giohang' element={<GioHang/>}/>
