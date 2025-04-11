@@ -1,16 +1,18 @@
 /** @type {import('tailwindcss').Config} */
-// import colors from 'tailwindcss/colors'
-const colors = require('tailwindcss/colors');
+const { 
+  lightBlue, trueGray, warmGray, coolGray, blueGray, // loại bỏ các màu deprecated
+  ...safeColors 
+} = require('tailwindcss/colors');
+
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-
   ],
   darkMode: 'class',
   theme: {
     colors: {
-      ...colors,
+      ...safeColors,
       transparent: 'transparent',
       current: 'currentColor',
       white: '#ffffff',
@@ -37,5 +39,3 @@ export default {
   },
   plugins: [],
 }
-
-
