@@ -60,7 +60,7 @@ function GioHang() {
             {cartItems.length === 0 ? (
               <div className="text-center text-black">
                 Giỏ Hàng của bạn hiện tại đang trống.{" "}
-                <Link to="/" className="text-red-600 underline">
+                <Link to="/home" className="text-red-600 underline">
                   Tại Đây !
                 </Link>
               </div>

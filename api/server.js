@@ -118,8 +118,46 @@ app.get("/api/chitietsanpham/:ma_san_pham", async (req, res) => {
     return res.status(500).json({ message: "Lỗi server!", error: err });
   }
 });
+/*app.post("/api/khachhang", async (req, res) => {
+  const { TenKhachHang, Email, DiaChi, Sdt, cart, total } = req.body;
 
+  if (!TenKhachHang || !Email || !DiaChi || !Sdt || !cart || cart.length === 0) {
+    return res.status(400).json({ message: "Thiếu thông tin đơn hàng." });
+  }
 
+  try {
+    // 1. Thêm khách hàng
+    const [resultKH] = await db.query(
+      "INSERT INTO khachhang (ten_kh, email, dia_chi, sdt) VALUES (?, ?, ?, ?)",
+      [TenKhachHang, Email, DiaChi, Sdt]
+    );
+
+    const ma_khach_hang = resultKH.insertId;
+
+    // 2. Tạo đơn hàng
+    const [resultDH] = await db.query(
+      "INSERT INTO donhang (ma_khach_hang, tong_tien, ngay_tao) VALUES (?, ?, NOW())",
+      [ma_khach_hang, total]
+    );
+
+    const ma_don_hang = resultDH.insertId;
+
+    // 3. Lưu chi tiết đơn hàng
+    for (const item of cart) {
+      await db.query(
+        "INSERT INTO chitietdonhang (ma_don_hang, ma_san_pham, so_luong, gia) VALUES (?, ?, ?, ?)",
+        [ma_don_hang, item.ma_san_pham, item.quantity, item.gia || item.Gia || 0]
+      );
+    }
+
+    res.status(200).json({ message: "Đặt hàng thành công!", ma_don_hang });
+  } catch (err) {
+    console.error("Lỗi khi thêm đơn hàng:", err);
+    res.status(500).json({ message: "Lỗi server!" });
+  }
+  
+  });
+  */
 // ✅ EXPORT: dùng cho Vercel
 export default app;
 

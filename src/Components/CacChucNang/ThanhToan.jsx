@@ -3,7 +3,7 @@ import Header from "../layout/Header";
 import Menu from "../layout/Menu";
 import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
-
+import { NODE } from "../../api";
 function ThanhToan() {
   const [formData, setFormData] = useState({
     name: "",
@@ -68,12 +68,11 @@ function ThanhToan() {
 
     try {
       console.log("Đang gửi đơn hàng...");
-      const response = await fetch("api/khachhang", {
+      const response = await fetch(`${NODE}/api/khachhang`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),
       });
-
       const data = await response.json();
       console.log("Dữ liệu phản hồi:", data);
 
@@ -189,7 +188,7 @@ function ThanhToan() {
             </h1>
             <p className="text-black mb-6">Cảm ơn bạn đã mua hàng.</p>
             <Link
-              to="/"
+              to="/home"
               className="inline-block bg-gradient-to-t from-Purple-dark from-5% via-Purple-C via-30% to-Purple-L text-white  hover:bg-Purple-dark py-2 px-4 rounded-lg ml-2"
             >
               Quay lại Trang Chủ
