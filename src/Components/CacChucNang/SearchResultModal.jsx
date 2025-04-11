@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { NODE } from "../../api";
 function SearchResultModal({ results = [], onClose }) {
     const [cart, setCart] = useState(() => {
@@ -31,10 +32,14 @@ function SearchResultModal({ results = [], onClose }) {
             localStorage.setItem("cart", JSON.stringify(cart));
         }
     }, [cart]);
-
-
+    const navigate = useNavigate();
+    
+    const handleClickProduct = (productId) => {
+        navigate(`/product/${productId}`);
+        if (onClose) onClose();
+      };
+    
     return (
-
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 w-full h-full">
             <div className="relative bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
                 <h3 className="text-lg font-semibold mb-4 text-center">Kết quả tìm kiếm</h3>
@@ -50,9 +55,10 @@ function SearchResultModal({ results = [], onClose }) {
                     results && Array.isArray(results) && (
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {results.map((product, index) => (
-                                <div
+                                <div 
                                     key={index}
                                     className="border rounded-lg p-4 flex flex-col items-center transition-transform duration-200 hover:scale-105"
+                                    onClick={() => handleClickProduct(product.ma_san_pham)}
                                 >
                                     <img
                                         src={`${NODE}/ImgDT/${product.img}`}
