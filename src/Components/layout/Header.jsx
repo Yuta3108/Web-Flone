@@ -94,7 +94,7 @@ function Header() {
       <div className="flex items-center space-x-4 mt-4 md:mt-0">
         {userName ? (
           <>
-            <span className="text-white text-sm">👋 Xin chào, <strong>{userName}</strong></span>
+            <span className="text-white text-sm">Xin chào, <strong>{userName}</strong></span>
             <button
               onClick={handleLogout}
               className="px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-md text-sm"
