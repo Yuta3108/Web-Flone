@@ -106,8 +106,7 @@ function GioHang() {
               <Link
                 to="/thanhtoan"
                 state={{ totalPrice: calculateTotalPrice() }}
-                className={`w-full py-2 rounded-lg transition block text-center ${isTotalZero ? "bg-white cursor-not-allowed" : "bg-Purple-dark text-white hover:bg-Purple-light"
-                  }`}
+                className={`w-full py-2 rounded-lg transition block text-center ${isTotalZero ? "bg-white cursor-not-allowed" : "bg-Purple-dark text-white hover:bg-Purple-light"}`}
               >
                 Thanh Toán
               </Link>

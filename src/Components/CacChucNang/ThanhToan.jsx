@@ -19,15 +19,88 @@ function ThanhToan() {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const location = useLocation();
-  const passedTotalPrice = location.state?.totalPrice || 0;
+  const totalFromState = location.state?.totalPrice || 0;
 
+
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("user"));
+
+  //   if (user && user.email) {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       email: user.email, // Cập nhật email từ local storage vào formData
+  //     }));
+  //   } else {
+  //     console.error("Không tìm thấy thông tin người dùng trong local storage.");
+  //   }
+  //   console.log(" tìm thấy thông tin người dùng trong local storage.", user);
+
+  //   const fetchCustomerData = async () => {
+  //     try {
+  //       const response = await fetch(`http://localhost:5173/api/khachhang/${formData.email}`);
+  //       if (response.ok) {
+  //         const customerData = await response.json();
+  //         console.log("Kết nối thành công:", customerData);
+
+  //         // Cập nhật formData với dữ liệu từ API
+  //         setFormData((prevData) => ({
+  //           ...prevData,
+  //           name: customerData.ten_khach_hang || "",
+  //           address: customerData.dia_chi || "",
+  //           phone: customerData.sdt || "",
+  //         }));
+  //       } else {
+  //         console.error("Lỗi khi lấy thông tin khách hàng");
+  //       }
+  //     } catch (error) {
+  //       console.error("Lỗi khi gửi yêu cầu:", error);
+  //     }
+  //   };
+  //   if (formData.email) {
+  //     fetchCustomerData();
+  //   }
+
+
+  // }, []);
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user && user.email && !formData.email) {
+      setFormData((prevData) => ({
+        ...prevData,
+        email: user.email,
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchCustomerData = async () => {
+      if (!formData.email) return;
+      try {
+        const response = await fetch(`http://localhost:5173/api/khachhang/${formData.email}`);
+        if (response.ok) {
+          const customerData = await response.json();
+          setFormData((prevData) => ({
+            ...prevData,
+            name: customerData.ten_khach_hang || "",
+            address: customerData.dia_chi || "",
+            phone: customerData.sdt || "",
+          }));
+        }
+      } catch (error) {
+        console.error("Lỗi khi gửi yêu cầu:", error);
+      }
+    };
+
+    fetchCustomerData();
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       setCartItems(JSON.parse(savedCart));
     }
-  }, []);
+
+  }, [formData.email]);
+
 
   const calculateTotalPrice = () => {
     return cartItems.reduce((total, item) => {
@@ -83,9 +156,9 @@ function ThanhToan() {
 
       if (response.ok) {
         console.log("Đặt hàng thành công:", data);
-        setPopupVisible(true); // Hiển thị popup sau khi đặt hàng thành công
-        localStorage.removeItem("cart"); // Xóa giỏ hàng sau khi đặt hàng thành công
-        setCartItems([]); // Xóa các mặt hàng trong giỏ hàng
+        setPopupVisible(true);
+        localStorage.removeItem("cart");
+        setCartItems([]);
       } else {
         console.error("Lỗi đặt hàng:", data);
         alert("Đặt hàng thất bại, vui lòng thử lại!");
@@ -101,19 +174,15 @@ function ThanhToan() {
       <Header />
       <Menu />
       <div style={{ margin: "20px" }} />
-
       <div className="container mx-auto p-4 ">
         <h2 className="text-2xl font-bold mb-4">Thông Tin Thanh Toán</h2>
-
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white p-8 rounded-lg shadow-lg mt-4"
-        >
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg mt-4">
           <div className="mb-4">
             <label className="block font-semibold mb-2">Họ và Tên</label>
             <input
               type="text"
               name="name"
+              value={formData.name} // Liên kết với dữ liệu người dùng
               className="border w-full px-4 py-2 rounded-md"
               onChange={handleChange}
             />
@@ -124,8 +193,9 @@ function ThanhToan() {
             <input
               type="email"
               name="email"
+              value={formData.email} // Liên kết với dữ liệu người dùng
               className="border w-full px-4 py-2 rounded-md"
-              onChange={handleChange}
+              readOnly
             />
             {errors.email && <p className="text-red-600">{errors.email}</p>}
           </div>
@@ -134,6 +204,7 @@ function ThanhToan() {
             <input
               type="text"
               name="address"
+              value={formData.address} // Liên kết với dữ liệu người dùng
               className="border w-full px-4 py-2 rounded-md"
               onChange={handleChange}
             />
@@ -144,6 +215,7 @@ function ThanhToan() {
             <input
               type="text"
               name="phone"
+              value={formData.phone} // Liên kết với dữ liệu người dùng
               className="border w-full px-4 py-2 rounded-md"
               onChange={handleChange}
             />
@@ -157,28 +229,20 @@ function ThanhToan() {
               <>
                 <ul>
                   {cartItems.map((item, index) => (
-                    <li
-                      key={index}
-                      className="border-b py-2 flex justify-between text-black"
-                    >
+                    <li key={index} className="border-b py-2 flex justify-between text-black">
                       <span>{item.ten_sp}</span>
                       <span>Số Lượng : {item.quantity}</span>
                     </li>
                   ))}
                 </ul>
-
-                {/* <div className="mt-4 text-xl font-semibold text-red-600 flex justify-between">
-                  <span>Tổng tiền:</span>
-                  <span>{calculateTotalPrice().toLocaleString()} VND</span>
-                </div> */}
                 <div className="mt-4 text-xl font-semibold text-red-600 flex justify-between">
                   <span>Tổng tiền:</span>
-                  <span>{passedTotalPrice.toLocaleString()} VND</span>
+                  {/* <span>{calculateTotalPrice().toLocaleString()} VND</span> */}
+                  <span>{totalFromState.toLocaleString()} VND</span>
                 </div>
               </>
             )}
           </div>
-
           <button
             type="submit"
             className="mt-auto px-4 py-2 bg-gradient-to-t from-Purple-dark from-5% via-Purple-C via-30% to-Purple-L text-white rounded-md hover:bg-Purple-dark w-full"
@@ -187,25 +251,20 @@ function ThanhToan() {
           </button>
         </form>
       </div>
-
-      {/* ✅ Popup xác nhận đặt hàng */}
       {isPopupVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h1 className="text-2xl font-bold text-black mb-4">
-              Đặt Hàng Thành Công!
-            </h1>
+            <h1 className="text-2xl font-bold text-black mb-4">Đặt Hàng Thành Công!</h1>
             <p className="text-black mb-6">Cảm ơn bạn đã mua hàng.</p>
             <Link
               to="/home"
-              className="inline-block bg-gradient-to-t from-Purple-dark from-5% via-Purple-C via-30% to-Purple-L text-white  hover:bg-Purple-dark py-2 px-4 rounded-lg ml-2"
+              className="inline-block bg-gradient-to-t from-Purple-dark from-5% via-Purple-C via-30% to-Purple-L text-white hover:bg-Purple-dark py-2 px-4 rounded-lg ml-2"
             >
               Quay lại Trang Chủ
             </Link>
           </div>
         </div>
       )}
-
       <Footer />
     </div>
   );
