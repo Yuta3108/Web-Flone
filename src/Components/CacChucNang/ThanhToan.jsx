@@ -4,6 +4,8 @@ import Menu from "../layout/Menu";
 import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
 import { NODE } from "../../api";
+import { useLocation } from "react-router-dom";
+
 function ThanhToan() {
   const [formData, setFormData] = useState({
     name: "",
@@ -16,6 +18,9 @@ function ThanhToan() {
   const [errors, setErrors] = useState({});
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const location = useLocation();
+  const passedTotalPrice = location.state?.totalPrice || 0;
+
 
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
@@ -162,9 +167,13 @@ function ThanhToan() {
                   ))}
                 </ul>
 
-                <div className="mt-4 text-xl font-semibold text-red-600 flex justify-between">
+                {/* <div className="mt-4 text-xl font-semibold text-red-600 flex justify-between">
                   <span>Tổng tiền:</span>
                   <span>{calculateTotalPrice().toLocaleString()} VND</span>
+                </div> */}
+                <div className="mt-4 text-xl font-semibold text-red-600 flex justify-between">
+                  <span>Tổng tiền:</span>
+                  <span>{passedTotalPrice.toLocaleString()} VND</span>
                 </div>
               </>
             )}

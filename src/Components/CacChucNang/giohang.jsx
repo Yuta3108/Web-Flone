@@ -96,8 +96,16 @@ function GioHang() {
               </span>
             </div>
             <div className="mt-4 text-center">
-              <Link
+              {/* <Link
                 to={isTotalZero ? "/giohang" : "/thanhtoan"}
+                className={`w-full py-2 rounded-lg transition block text-center ${isTotalZero ? "bg-white cursor-not-allowed" : "bg-Purple-dark text-white hover:bg-Purple-light"
+                  }`}
+              >
+                Thanh Toán
+              </Link> */}
+              <Link
+                to="/thanhtoan"
+                state={{ totalPrice: calculateTotalPrice() }}
                 className={`w-full py-2 rounded-lg transition block text-center ${isTotalZero ? "bg-white cursor-not-allowed" : "bg-Purple-dark text-white hover:bg-Purple-light"
                   }`}
               >
