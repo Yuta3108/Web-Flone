@@ -17,25 +17,25 @@ export default function Sidebar() {
         </li>
         <li
           className="flex items-center gap-3 text-gray-700 dark:text-white hover:text-blue-600 cursor-pointer"
-          onClick={() => navigate("/dashboard/sanpham")}
+          onClick={() => navigate("/dashboard-sanpham")}
         >
           <Smartphone size={20} /> Sản phẩm
         </li>
         <li
           className="flex items-center gap-3 text-gray-700 dark:text-white hover:text-blue-600 cursor-pointer"
-          onClick={() => navigate("/dashboard/donhang")}
+          onClick={() => navigate("/dashboard-donhang")}
         >
           <ShoppingCart size={20} /> Đơn hàng
         </li>
         <li
           className="flex items-center gap-3 text-gray-700 dark:text-white hover:text-blue-600 cursor-pointer"
-          onClick={() => navigate("/dashboard/khachhang")}
+          onClick={() => navigate("/dashboard-khachhang")}
         >
           <Users size={20} /> Khách hàng
         </li>
         <li
           className="flex items-center gap-3 text-gray-700 dark:text-white hover:text-blue-600 cursor-pointer"
-          onClick={() => navigate("/dashboard/caidat")}
+          onClick={() => navigate("/dashboard-caidat")}
         >
           
         </li>

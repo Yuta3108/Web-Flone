@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../layout/Sidebar";
 import Navbar from "../layout/Navbar";
 import Loader from "../layout/Loader";
+import { SPRING } from "../../api";
 
-const API_BASE = "https://nhom5ca1thu4.onrender.com/api";
 
 export default function SanPhamPage() {
   const [darkMode, setDarkMode] = useState(false);
@@ -14,7 +14,7 @@ export default function SanPhamPage() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API_BASE}/sanpham`);
+      const res = await fetch(`${SPRING}/api/sanpham`);
       const data = await res.json();
       setProducts(data);
     } catch (err) {
@@ -26,7 +26,7 @@ export default function SanPhamPage() {
 
   const fetchChiTiet = async () => {
     try {
-      const res = await fetch(`${API_BASE}/chitietsanpham`);
+      const res = await fetch(`${SPRING}/api/chitietsanpham`);
       const data = await res.json();
       const detailMap = {};
       data.forEach((d) => {
@@ -69,7 +69,7 @@ export default function SanPhamPage() {
     };
 
     try {
-      const res = await fetch(`${API_BASE}/chitietsanpham/${detail.maMt}`, {
+      const res = await fetch(`${SPRING}/api/chitietsanpham/${detail.maMt}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -88,7 +88,7 @@ export default function SanPhamPage() {
   const handleDeleteDetail = async (maMt) => {
     if (!window.confirm("Xoá chi tiết sản phẩm này?")) return;
     try {
-      const res = await fetch(`${API_BASE}/chitietsanpham/${maMt}`, {
+      const res = await fetch(`${SPRING}/api/chitietsanpham/${maMt}`, {
         method: "DELETE",
       });
       if (res.ok) {
@@ -132,7 +132,7 @@ export default function SanPhamPage() {
                         <tr className="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
                           <td className="p-3">
                             <img
-                              src={`/ImgDT/${p.img}`}
+                              src={`${p.img}`}
                               alt={p.tenSp}
                               className="w-16 h-16 object-cover rounded"
                             />

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../layout/Sidebar';
 import Navbar from '../layout/Navbar';
+import { SPRING } from '../../api';
 
-const API_BASE = 'https://nhom5ca1thu4.onrender.com/api/khachhang';
 
 export default function KhachHangPage() {
   const [darkMode, setDarkMode] = useState(false);
@@ -12,7 +12,7 @@ export default function KhachHangPage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch(API_BASE);
+      const res = await fetch(`${SPRING}/api/khachhang`);
       const data = await res.json();
       setUsers(data);
     } catch (err) {
@@ -27,7 +27,7 @@ export default function KhachHangPage() {
   const handleDelete = async (id) => {
     if (!window.confirm("Xác nhận xoá khách hàng?")) return;
     try {
-      await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+      await fetch(`${`${SPRING}/api/khachhang`}/${id}`, { method: 'DELETE' });
       fetchUsers();
     } catch (err) {
       alert("Xoá thất bại.");
@@ -41,7 +41,7 @@ export default function KhachHangPage() {
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`${API_BASE}/${editUser.maKhachHang}`, {
+      const res = await fetch(`${`${SPRING}/api/khachhang`}/${editUser.maKhachHang}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editUser),
