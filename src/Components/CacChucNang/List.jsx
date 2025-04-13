@@ -61,7 +61,7 @@ function List() {
           >
             {/* Ảnh sản phẩm */}
             <img
-              src={`/ImgDT/${phone.img}`}
+              src={`${phone.img}`}
               alt={phone.ten_sp || "Tên sản phẩm"}
               className="w-24 h-24 object-cover mb-2"
             />
