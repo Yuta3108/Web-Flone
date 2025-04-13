@@ -61,7 +61,7 @@ function ProductDetail() {
         {/* Hình ảnh sản phẩm */}
         <div className="flex flex-col items-center">
           <img
-            src={`/ImgDT/${selectedImage}`}
+            src={`${NODE}/${selectedImage}`}
             alt={product.ten_sp}
             className="w-full h-auto object-cover rounded-lg shadow-md"
           />
@@ -70,7 +70,7 @@ function ProductDetail() {
           <div className="flex justify-center mt-4 space-x-4">
             {product.img1 && (
               <img
-                src={`/ImgDT/${product.img1}`}
+                src={`${NODE}/${product.img1}`}
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img1 ? "border-blue" : ""}`}
                 onClick={() => setSelectedImage(product.img1)}
@@ -78,7 +78,7 @@ function ProductDetail() {
             )}
             {product.img2 && (
               <img
-                src={`/ImgDT/${product.img2}`}
+                src={`${NODE}/${product.img2}`}
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img2 ? "border-blue" : ""}`}
                 onClick={() => setSelectedImage(product.img2)}
@@ -86,7 +86,7 @@ function ProductDetail() {
             )}
             {product.img3 && (
               <img
-                src={`/ImgDT/${product.img3}`}
+                src={`${NODE}/${product.img3}`}
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img3 ? "border-blue-500" : ""}`}
                 onClick={() => setSelectedImage(product.img3)}

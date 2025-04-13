@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../layout/Sidebar';
 import Navbar from '../layout/Navbar';
 
-const dummyUsers = [
-  { id: 1, name: 'Nguyễn Văn A', email: 'a@example.com', role: 'Khách hàng' },
-  { id: 2, name: 'Trần Thị B', email: 'b@example.com', role: 'Khách hàng' },
-];
+const API_BASE = 'https://nhom5ca1thu4.onrender.com/api/khachhang';
 
 export default function KhachHangPage() {
   const [darkMode, setDarkMode] = useState(false);
-  const [users, setUsers] = useState(dummyUsers);
+  const [users, setUsers] = useState([]);
   const [editUser, setEditUser] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleDelete = (id) => {
-    setUsers(users.filter(user => user.id !== id));
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch(API_BASE);
+      const data = await res.json();
+      setUsers(data);
+    } catch (err) {
+      console.error("Lỗi tải khách hàng:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Xác nhận xoá khách hàng?")) return;
+    try {
+      await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+      fetchUsers();
+    } catch (err) {
+      alert("Xoá thất bại.");
+    }
   };
 
   const handleEdit = (user) => {
@@ -22,9 +39,22 @@ export default function KhachHangPage() {
     setModalOpen(true);
   };
 
-  const handleSave = () => {
-    setUsers(users.map(u => u.id === editUser.id ? editUser : u));
-    setModalOpen(false);
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/${editUser.maKhachHang}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editUser),
+      });
+      if (res.ok) {
+        fetchUsers();
+        setModalOpen(false);
+      } else {
+        alert("Cập nhật thất bại.");
+      }
+    } catch (err) {
+      alert("Lỗi cập nhật.");
+    }
   };
 
   return (
@@ -43,26 +73,28 @@ export default function KhachHangPage() {
                     <th className="p-3 text-left">ID</th>
                     <th className="p-3 text-left">Họ tên</th>
                     <th className="p-3 text-left">Email</th>
-                    <th className="p-3 text-left">Vai trò</th>
+                    <th className="p-3 text-left">SĐT</th>
+                    <th className="p-3 text-left">Địa chỉ</th>
                     <th className="p-3 text-left">Hành động</th>
                   </tr>
                 </thead>
                 <tbody>
                   {users.map(user => (
-                    <tr key={user.id} className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
-                      <td className="p-3">{user.id}</td>
-                      <td className="p-3">{user.name}</td>
+                    <tr key={user.maKhachHang} className="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <td className="p-3">{user.maKhachHang}</td>
+                      <td className="p-3">{user.tenKhachHang}</td>
                       <td className="p-3">{user.email}</td>
-                      <td className="p-3">{user.role}</td>
+                      <td className="p-3">{user.sdt}</td>
+                      <td className="p-3">{user.diaChi}</td>
                       <td className="p-3 space-x-2">
                         <button onClick={() => handleEdit(user)} className="text-yellow-500">Sửa</button>
-                        <button onClick={() => handleDelete(user.id)} className="text-red-500">Xóa</button>
+                        <button onClick={() => handleDelete(user.maKhachHang)} className="text-red-500">Xóa</button>
                       </td>
                     </tr>
                   ))}
                   {users.length === 0 && (
                     <tr>
-                      <td colSpan={5} className="text-center p-4 text-gray-600 dark:text-gray-300">Không có khách hàng nào.</td>
+                      <td colSpan={6} className="text-center p-4 text-gray-600 dark:text-gray-300">Không có khách hàng nào.</td>
                     </tr>
                   )}
                 </tbody>
@@ -77,8 +109,8 @@ export default function KhachHangPage() {
                   <input
                     type="text"
                     placeholder="Tên khách hàng"
-                    value={editUser.name}
-                    onChange={(e) => setEditUser({ ...editUser, name: e.target.value })}
+                    value={editUser.tenKhachHang}
+                    onChange={(e) => setEditUser({ ...editUser, tenKhachHang: e.target.value })}
                     className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
                   />
                   <input
@@ -86,6 +118,20 @@ export default function KhachHangPage() {
                     placeholder="Email"
                     value={editUser.email}
                     onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
+                    className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="SĐT"
+                    value={editUser.sdt}
+                    onChange={(e) => setEditUser({ ...editUser, sdt: e.target.value })}
+                    className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Địa chỉ"
+                    value={editUser.diaChi}
+                    onChange={(e) => setEditUser({ ...editUser, diaChi: e.target.value })}
                     className="w-full p-2 mb-4 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
                   />
                   <div className="flex justify-end space-x-2">

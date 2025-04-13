@@ -158,6 +158,26 @@ app.get("/api/chitietsanpham/:ma_san_pham", async (req, res) => {
   
   });
   */
+// API hiển thị thông tin khách hàng (nếu có) trên trang thanh toán
+app.get("/api/khachhang/:email", async (req, res) => {
+  const { email } = req.params;
+  try {
+    const [rows] = await db.query(
+      "SELECT ma_khach_hang, ten_khach_hang, email, dia_chi, sdt FROM khachhang WHERE email = ?",
+      [email]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy khách hàng" });
+    }
+
+    res.status(200).json(rows[0]);
+  } catch (err) {
+    console.error("Lỗi lấy khách hàng:", err);
+    res.status(500).json({ message: "Lỗi server!" });
+  }
+});
+
 export default app;
 
 // ✅ LISTEN: dùng khi chạy local (Node)

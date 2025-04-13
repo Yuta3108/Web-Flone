@@ -18,7 +18,7 @@ function DangNhap() {
       const response = await fetch(`${SPRING}/api/khachhang/dangnhap`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, matKhau: password }) 
+        body: JSON.stringify({ email, matKhau: password })
       });
 
       if (!response.ok) {
@@ -27,8 +27,10 @@ function DangNhap() {
       }
 
       const data = await response.json();
+
       if (data && data.email) {
-        localStorage.setItem("user", JSON.stringify(data)); // ✅ Lưu user
+        localStorage.setItem("user", JSON.stringify(data));       // ✅ Lưu user
+        localStorage.setItem("email", data.email);                // ✅ Lưu riêng email
         navigate("/home");
       } else {
         setError("Đăng nhập thất bại. Vui lòng thử lại.");
@@ -38,6 +40,7 @@ function DangNhap() {
       setError("Lỗi kết nối đến server.");
     }
   };
+
 
   return (
     <div className="bg-bg-test bg-fixed bg-cover">
