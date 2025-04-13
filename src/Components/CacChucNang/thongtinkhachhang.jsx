@@ -33,6 +33,10 @@ import Footer from "../layout/Footer";
       alert("Số điện thoại phải gồm 10 đến 11 chữ số.");
       return;
     }
+    if (!/[a-zA-Z]/.test(formData.matKhau) || matKhau.length < 8) {
+      alert("Mật khẩu phải có chữ và ít nhất 8 ký tự.");
+      return;
+    }
     try {
       const res = await fetch(`${SPRING}/api/khachhang/${formData.maKhachHang}`, {
         method: "PUT",
