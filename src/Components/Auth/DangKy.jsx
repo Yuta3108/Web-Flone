@@ -18,32 +18,40 @@ function DangKy() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+  
+    if (!/[a-zA-Z]/.test(matKhau) || matKhau.length < 8) {
+      setError("Mật khẩu phải có chữ và ít nhất 8 ký tự.");
+      return;
+    }
+    if (!/^\d{10,11}$/.test(sdt)) {
+      setError("Số điện thoại phải gồm 10 đến 11 chữ số.");
+      return;
+    }
+  
     const tenKhachHang = `${ho} ${ten}`.trim();
     const data = { tenKhachHang, email, matKhau, sdt, diaChi };
-
+  
     try {
-      const response = await fetch(
-        `${SPRING}/api/khachhang/dangky`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
-
+      const response = await fetch(`${SPRING}/api/khachhang/dangky`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+  
       if (response.ok) {
         alert("Đăng ký thành công!");
         navigate("/dangnhap");
       } else {
         const err = await response.json();
-        setError(err.message || "Đăng ký thất bại.");
+        setError(err.message || "Đăng ký thất bại. Do Trùng  Email Khách hàng ");
       }
     } catch (err) {
       console.error("Lỗi đăng ký:", err);
       setError("Lỗi kết nối đến máy chủ.");
     }
   };
+  
 
   return (
     <div className="bg-bg-test bg-fixed bg-cover">
