@@ -87,7 +87,7 @@ function GioHang() {
           <div className="bg-white rounded-lg shadow-lg p-4 border-2">
             <h2 className="text-xl font-bold mb-4 border-b pb-2">Thông Tin Đơn Hàng</h2>
             <div className="flex justify-between text-gray-500">
-              <span>Tổng số Tiền</span>
+              <span>Tổng Tiền</span>
               <span className="text-red-600 font-bold">
                 {calculateTotalPrice() > 0
                   ? calculateTotalPrice().toLocaleString()
