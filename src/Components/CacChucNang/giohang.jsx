@@ -82,6 +82,11 @@ function GioHang() {
                 </div>
               ))
             )}
+            {/* Dòng chữ ở dưới danh sách sản phẩm */}
+            <div className="mt-4 text-blue-600 font-medium">
+              Bạn muốn thêm 1 sản phẩm khác vào giỏ hàng?{" "}
+              <Link to="/home" className="text-red-600 underline">Chọn thêm tại đây!</Link>
+            </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-lg p-4 border-2">
