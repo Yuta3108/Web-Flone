@@ -55,31 +55,38 @@ import Footer from "../layout/Footer";
     }
   };
 
-  const renderField = (label, field, value, isPassword = false) => (
-    <div className="flex flex-col md:flex-row items-center justify-between py-3 border-b text-center md:text-left">
-      <span className="w-full md:w-1/4 font-medium text-gray-700">{label}</span>
+  const renderField = (label, field, value, isPassword = false) => {
+    const isEmail = field === "email";
   
-      {editField === field ? (
-        <input
-          type={isPassword ? "password" : "text"}
-          value={formData[field] || ""}
-          onChange={(e) => handleChange(field, e.target.value)}
-          className="border px-3 py-1 rounded w-full md:w-1/2 text-center md:text-left"
-        />
-      ) : (
-        <span className="w-full md:w-1/2 font-semibold text-black">
-          {value || <em className="text-gray-400">Chưa cập nhật</em>}
-        </span>
-      )}
+    return (
+      <div className="flex flex-col md:flex-row items-center justify-between py-3 border-b text-center md:text-left">
+        <span className="w-full md:w-1/4 font-medium text-gray-700">{label}</span>
   
-      <button
-        onClick={() => handleEdit(field)}
-        className="text-Purple-dark hover:underline w-full md:w-auto mt-2 md:mt-0"
-      >
-        Chỉnh Sửa
-      </button>
-    </div>
-  );
+        {editField === field && !isEmail ? (
+          <input
+            type={isPassword ? "password" : "text"}
+            value={formData[field] || ""}
+            onChange={(e) => handleChange(field, e.target.value)}
+            className="border px-3 py-1 rounded w-full md:w-1/2 text-center md:text-left"
+          />
+        ) : (
+          <span className="w-full md:w-1/2 font-semibold text-black">
+            {isPassword ? "********" : (value || <em className="text-gray-400">Chưa cập nhật</em>)}
+          </span>
+        )}
+  
+        {!isEmail && (
+          <button
+            onClick={() => handleEdit(field)}
+            className="text-Purple-dark hover:underline w-full md:w-auto mt-2 md:mt-0"
+          >
+            Chỉnh Sửa
+          </button>
+        )}
+      </div>
+    );
+  };
+  
   
 
   if (!user) return null;
