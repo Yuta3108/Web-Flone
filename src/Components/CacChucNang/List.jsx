@@ -7,7 +7,6 @@ function List() {
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")) || []); // Giỏ hàng lấy từ localStorage
   const navigate = useNavigate(); // Hook để điều hướng
 
-  // Lấy danh sách điện thoại từ server
   useEffect(() => {
     fetch(`${NODE}/api/phones`)
       .then((res) => res.json())
@@ -56,7 +55,7 @@ function List() {
         {phones.map((phone, index) => (
           <div
             key={index}
-            onClick={() => navigate(`/product/${phone.ma_san_pham}`)} // Điều hướng đến trang chi tiết sản phẩm
+            onClick={() => navigate(`/product/${phone.ma_san_pham}`)} 
             className="cursor-pointer border rounded-lg p-4 flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl transition-transform duration-200 hover:scale-105"
           >
             {/* Ảnh sản phẩm */}
@@ -82,7 +81,7 @@ function List() {
             {/* Nút thêm vào giỏ hàng */}
             <button
               onClick={(e) => {
-                e.stopPropagation(); // Ngừng sự kiện onClick từ đi tới chi tiết khi nhấn nút giỏ hàng
+                e.stopPropagation();
                 addToCart(phone);
               }}
               className="mt-auto px-4 py-2 bg-gradient-to-t from-Purple-dark from-5% via-Purple-C via-30% to-Purple-L text-white rounded-md hover:bg-Purple-dark w-full"

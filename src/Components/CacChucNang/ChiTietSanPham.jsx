@@ -61,7 +61,7 @@ function ProductDetail() {
         {/* Hình ảnh sản phẩm */}
         <div className="flex flex-col items-center">
           <img
-            src={`${NODE}/${selectedImage}`}
+            src={selectedImage.startsWith("http") ? selectedImage : `/${selectedImage}`} //sử dụng startwith để check đường dẫn có đúng ở http hay không
             alt={product.ten_sp}
             className="w-full h-auto object-cover rounded-lg shadow-md"
           />
@@ -70,7 +70,7 @@ function ProductDetail() {
           <div className="flex justify-center mt-4 space-x-4">
             {product.img1 && (
               <img
-                src={`${NODE}/${product.img1}`}
+              src={product.img1.startsWith("http") ? product.img1 : `/${product.img1}`}
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img1 ? "border-blue" : ""}`}
                 onClick={() => setSelectedImage(product.img1)}
@@ -78,7 +78,7 @@ function ProductDetail() {
             )}
             {product.img2 && (
               <img
-                src={`${NODE}/${product.img2}`}
+              src={product.img2.startsWith("http") ? product.img2 : `/${product.img2}`}
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img2 ? "border-blue" : ""}`}
                 onClick={() => setSelectedImage(product.img2)}
@@ -86,7 +86,7 @@ function ProductDetail() {
             )}
             {product.img3 && (
               <img
-                src={`${NODE}/${product.img3}`}
+              src={product.img2.startsWith("http") ? product.img2 : `/${product.img2}`} 
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img3 ? "border-blue-500" : ""}`}
                 onClick={() => setSelectedImage(product.img3)}
