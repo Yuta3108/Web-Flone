@@ -3,10 +3,8 @@ import Header from "../layout/Header";
 import Menu from "../layout/Menu";
 import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
-import { NODE } from "../../api";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
 function ThanhToan() {
   const [formData, setFormData] = useState({
     name: "",

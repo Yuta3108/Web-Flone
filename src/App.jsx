@@ -11,6 +11,7 @@ import SanPhamPage from './Components/layout/SanPhamPage'
 import DonHangPage from './Components/layout/DonHangPage'
 import KhachHangPage from './Components/layout/KhachHangPage'
 import DonHang from './Components/layout/Donhang'
+import HienThiThongTinKhachHang from './Components/CacChucNang/thongtinkhachhang'
 function App() {
   return (
     <>
@@ -22,11 +23,15 @@ function App() {
           <Route path='/giohang' element={<GioHang />} />
           <Route path='/thanhtoan' element={<ThanhToan />} />
           <Route path="/product/:id" element={<ChitietSanPham />} />
-          <Route path="/dashboard" element={<AdminDashboard />} />
-          <Route path="/dashboard/sanpham" element={<SanPhamPage />} />
-          <Route path="/dashboard/donhang" element={<DonHangPage />} />
-          <Route path="/dashboard/khachhang" element={<KhachHangPage />} />
           <Route path="/donhang" element={<DonHang />} />
+          <Route path="/thongtinkhachhang" element={<HienThiThongTinKhachHang />} />
+
+          //dashboard
+          <Route path="/dashboard" element={<AdminDashboard />} />
+          <Route path="/dashboard-sanpham" element={<SanPhamPage />} />
+          <Route path="/dashboard-donhang" element={<DonHangPage />} />
+          <Route path="/dashboard-khachhang" element={<KhachHangPage />} />
+          
         </Routes>
       </div>
     </>
