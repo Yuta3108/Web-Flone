@@ -14,7 +14,7 @@ export default function SanPhamPage() {
     tenSp: "",
     gia: "",
     giaCu: "",
-    soLuong: "",
+    soLuong: "",  
     maLoaiSanPham: "",
   });
   const [newDetail, setNewDetail] = useState({
@@ -103,22 +103,30 @@ export default function SanPhamPage() {
     }
   };
 
-  const handleDeleteDetail = async (maMt) => {
-    if (!window.confirm("Bạn có chắc muốn xoá chi tiết sản phẩm này?")) return;
+  const handleDeleteDetail = async (maSP) => {
+    if (!window.confirm("Bạn có chắc muốn xoá sản phẩm và chi tiết sản phẩm này?")) return;
     try {
-      const res = await fetch(`${SPRING}/api/chitietsanpham/${maMt}`, {
+      const maMt = details[maSP]?.maMt;
+      if (maMt) {
+        const resDetail = await fetch(`${SPRING}/api/chitietsanpham/${maMt}`, {
+          method: "DELETE",
+        });
+        if (!resDetail.ok) throw new Error("Xoá chi tiết thất bại");
+      }
+      const resProduct = await fetch(`${SPRING}/api/sanpham/${maSP}`, {
         method: "DELETE",
       });
-      if (res.ok) {
-        alert("Đã xoá chi tiết sản phẩm.");
-        fetchChiTiet();
-      } else {
-        alert("Xoá thất bại!");
-      }
+      if (!resProduct.ok) throw new Error("Xoá sản phẩm thất bại");
+
+      alert("✅ Đã xoá sản phẩm và chi tiết sản phẩm.");
+      fetchProducts();
+      fetchChiTiet();
     } catch (err) {
-      alert("Lỗi xoá chi tiết sản phẩm.");
+      console.error("Lỗi xoá sản phẩm hoặc chi tiết:", err);
+      alert("❌ Lỗi xoá sản phẩm hoặc chi tiết!");
     }
   };
+
 
   const handleAddProduct = async () => {
     if (!img || !newProduct.tenSp || !newProduct.maLoaiSanPham) {
@@ -216,7 +224,21 @@ export default function SanPhamPage() {
               <input className="p-2 border rounded dark:bg-gray-700" placeholder="Giá" value={newProduct.gia} onChange={(e) => setNewProduct({ ...newProduct, gia: e.target.value })} />
               <input className="p-2 border rounded dark:bg-gray-700" placeholder="Giá cũ" value={newProduct.giaCu} onChange={(e) => setNewProduct({ ...newProduct, giaCu: e.target.value })} />
               <input className="p-2 border rounded dark:bg-gray-700" placeholder="Số lượng" value={newProduct.soLuong} onChange={(e) => setNewProduct({ ...newProduct, soLuong: e.target.value })} />
-              <input className="p-2 border rounded dark:bg-gray-700" placeholder="Mã loại sản phẩm" value={newProduct.maLoaiSanPham} onChange={(e) => setNewProduct({ ...newProduct, maLoaiSanPham: e.target.value })} />
+              <select
+  className="p-2 border rounded dark:bg-gray-700"
+  value={newProduct.maLoaiSanPham}
+  onChange={(e) => setNewProduct({ ...newProduct, maLoaiSanPham: e.target.value })}
+>
+  <option value="">Chọn loại sản phẩm</option>
+  <option value="1">Xiaomi</option>
+  <option value="2">Oppo</option>
+  <option value="3">iPhone</option>
+  <option value="4">Vivo</option>
+  <option value="5">Samsung</option>
+  <option value="6">Honor</option>
+  <option value="7">Realme</option>
+</select>
+
               <input className="p-2 border rounded dark:bg-gray-700" placeholder="Loại CPU" value={newDetail.loaiCpu} onChange={(e) => setNewDetail({ ...newDetail, loaiCpu: e.target.value })} />
               <input type="file" onChange={(e) => setImg(e.target.files[0])} className="p-2 border rounded dark:bg-gray-700" />
             </div>
@@ -259,14 +281,24 @@ export default function SanPhamPage() {
                             <td className="p-3"><img src={p.img} alt={p.tenSp} className="w-16 h-16 object-cover rounded" /></td>
                             <td className="p-3">{p.tenSp}</td>
                             <td className="p-3 text-green-600 font-semibold">{Number(p.gia).toLocaleString()}đ</td>
-                            <td className="p-3 text-red-500 laine-through">{Number(p.giaCu).toLocaleString()}đ</td>
+                            <td className="p-3 text-red-500 line-through">{Number(p.giaCu).toLocaleString()}đ</td>
                             <td className="p-3">{p.loaiSanPham?.tenLoaiSanPham}</td>
                             <td className="p-3">{p.soLuong}</td>
-                            <td className="p-3">
-                              <button onClick={() => toggleDetail(p.maSanPham)} className="text-blue-600 underline hover:text-blue-800">
-                                Chi tiết sản phẩm
-                              </button>
-                            </td>
+                            <td className="p-3 space-x-2">
+  <button
+    onClick={() => toggleDetail(p.maSanPham)}
+    className="text-blue-600 underline hover:text-blue-800"
+  >
+    Chi tiết sản phẩm
+  </button>
+  <button
+    onClick={() => handleDeleteDetail(p.maSanPham)}
+    className="text-red-600 underline hover:text-red-800"
+  >
+    Xoá
+  </button>
+</td>
+
                           </tr>
                           {visibleDetails[p.maSanPham] && details[p.maSanPham] && (
                             <tr className="bg-gray-50 dark:bg-gray-700">
