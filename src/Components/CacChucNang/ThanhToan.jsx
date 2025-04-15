@@ -20,6 +20,7 @@ function ThanhToan() {
   const location = useLocation();
   const navigate = useNavigate();
   const totalFromState = location.state?.totalPrice || 0;
+
   const [isCustomerFetched, setIsCustomerFetched] = useState(false);
   const hasCustomerInfo = (data) => {
     return data.ten_khach_hang || data.dia_chi || data.sdt || data.email;
@@ -51,6 +52,10 @@ function ThanhToan() {
             address: customerData.dia_chi || "",
             phone: customerData.sdt || "",
           }));
+          // 🆕 Lưu thêm user nếu có ma_khach_hang
+          if (customerData.ma_khach_hang) {
+            localStorage.setItem("user", JSON.stringify(customerData)); // ✅ lưu luôn user đầy đủ
+          }
           if (hasCustomerInfo(customerData)) {
             setIsCustomerFetched(true); //đánh dấu là lấy dữ liệu khách hàng
           }
@@ -92,51 +97,8 @@ function ThanhToan() {
     return newErrors;
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const validationErrors = validateForm();
-  //   if (Object.keys(validationErrors).length > 0) {
-  //     setErrors(validationErrors);
-  //     return;
-  //   }
 
-  //   setErrors({});
-
-  //   const orderData = {
-  //     TenKhachHang: formData.name,
-  //     Email: formData.email,
-  //     DiaChi: formData.address,
-  //     Sdt: formData.phone,
-  //     cart: cartItems,
-  //     total: totalFromState,
-  //     paymentMethod: formData.paymentMethod,
-  //   };
-
-  //   try {
-  //     console.log("Đang gửi đơn hàng...");
-  //     const response = await fetch(`${NODE}/api/khachhang`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(orderData),
-  //     });
-  //     const data = await response.json();
-  //     console.log("Dữ liệu phản hồi:", data);
-
-  //     if (response.ok) {
-  //       console.log("Đặt hàng thành công:", data);
-  //       localStorage.removeItem("cart");
-  //       setCartItems([]);
-  //       navigate("/Donhang"); // 👉 chuyển hướng sang trang Đơn hàng
-  //     } else {
-  //       console.error("Lỗi đặt hàng:", data);
-  //       alert("Đặt hàng thất bại, vui lòng thử lại!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Lỗi khi gửi dữ liệu:", error);
-  //     alert("Đã xảy ra lỗi, vui lòng thử lại sau!");
-  //   }
-  // };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const validationErrors = validateForm();
@@ -146,19 +108,74 @@ function ThanhToan() {
     }
 
     setErrors({});
+    const total = calculateTotalPrice();
+    const soluong = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const products = cartItems.map((item) => ({
+      ma_san_pham: item.ma_san_pham,
+      so_luong: item.quantity,
+      gia: item.gia,
+    }));
 
-    // 👉 Xoá giỏ hàng trong localStorage sau khi đặt hàng thành công
-    localStorage.removeItem("cart");
-    setCartItems([]);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const isLoggedIn = user && user.ma_khach_hang;
 
-    // 👉 Sau khi hợp lệ, chuyển trang:
-    navigate("/donhang", {
-      state: {
-        formData,
-        cartItems,
-        total: calculateTotalPrice(),
-      },
-    });
+    const url = isLoggedIn
+      ? "http://localhost:5000/api/donhang"
+      : "http://localhost:5000/api/donhangtam";
+
+    const body = isLoggedIn
+      ? {
+        tongtien: total,
+        ma_khach_hang: user.ma_khach_hang,
+        diachigh: formData.address,
+        phuongthucthanhtoan: formData.paymentMethod,
+        soluong,
+        products,
+      }
+      : {
+        total,
+        diachightam: formData.address,
+        tenkhtam: formData.name,
+        emailtam: formData.email,
+        sdttam: formData.phone,
+        phuongthucthanhtoan: formData.paymentMethod,
+        soluong,
+        products,
+      };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("✅ Đơn hàng + chi tiết đã được lưu:", result);
+        localStorage.setItem("orderId", result.orderId);
+        localStorage.removeItem("cart");
+        setCartItems([]);
+
+        navigate("/donhang", {
+          state: {
+            formData,
+            cartItems,
+            total,
+            orderId: result.orderId,
+          },
+        });
+      } else {
+        console.error("❌ Lỗi khi lưu đơn hàng:", result.message);
+        alert("Đã có lỗi khi lưu đơn hàng. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("❌ Lỗi kết nối:", error);
+      alert("Lỗi kết nối. Vui lòng thử lại sau.");
+    }
   };
 
   return (
@@ -258,7 +275,7 @@ function ThanhToan() {
                     </ul>
                     <div className="mt-4 text-xl font-semibold text-red-600 flex justify-between">
                       <span>Tổng tiền:</span>
-                      <span>{totalFromState.toLocaleString()} VND</span>
+                      <span>{calculateTotalPrice().toLocaleString()} VND</span>
                     </div>
                   </>
                 )}
@@ -274,21 +291,6 @@ function ThanhToan() {
           </div>
         </div>
       </div>
-
-      {/* {isPopupVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h1 className="text-2xl font-bold text-black mb-4">Đặt Hàng Thành Công!</h1>
-            <p className="text-black mb-6">Cảm ơn bạn đã mua hàng.</p>
-            <Link
-              to="/home"
-              className="inline-block bg-gradient-to-t from-Purple-dark from-5% via-Purple-C via-30% to-Purple-L text-white hover:bg-Purple-dark py-2 px-4 rounded-lg ml-2"
-            >
-              Quay lại Trang Chủ
-            </Link>
-          </div>
-        </div>
-      )} */}
 
       <Footer />
     </div>
