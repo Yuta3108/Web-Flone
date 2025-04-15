@@ -89,11 +89,10 @@ function ProductDetail() {
             )}
             {product.img3 && (
               <img
-<<<<<<< HEAD
-                src={product.img2.startsWith("http") ? product.img2 : `/${product.img2}`}
-=======
-              src={product.img2.startsWith("http") ? product.img3 : `/${product.img3}`} 
->>>>>>> e6b06acc5fc0a5e1e4cf5979b6178831c26d3882
+
+
+                src={product.img3.startsWith("http") ? product.img3 : `/${product.img3}`}
+                e6b06acc5fc0a5e1e4cf5979b6178831c26d3882
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img3 ? "border-blue-500" : ""}`}
                 onClick={() => setSelectedImage(product.img3)}
