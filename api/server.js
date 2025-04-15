@@ -118,46 +118,7 @@ app.get("/api/chitietsanpham/:ma_san_pham", async (req, res) => {
     return res.status(500).json({ message: "Lỗi server!", error: err });
   }
 });
-/*app.post("/api/khachhang", async (req, res) => {
-  const { TenKhachHang, Email, DiaChi, Sdt, cart, total } = req.body;
 
-  if (!TenKhachHang || !Email || !DiaChi || !Sdt || !cart || cart.length === 0) {
-    return res.status(400).json({ message: "Thiếu thông tin đơn hàng." });
-  }
-
-  try {
-    // 1. Thêm khách hàng
-    const [resultKH] = await db.query(
-      "INSERT INTO khachhang (ten_kh, email, dia_chi, sdt) VALUES (?, ?, ?, ?)",
-      [TenKhachHang, Email, DiaChi, Sdt]
-    );
-
-    const ma_khach_hang = resultKH.insertId;
-
-    // 2. Tạo đơn hàng
-    const [resultDH] = await db.query(
-      "INSERT INTO donhang (ma_khach_hang, tong_tien, ngay_tao) VALUES (?, ?, NOW())",
-      [ma_khach_hang, total]
-    );
-
-    const ma_don_hang = resultDH.insertId;
-
-    // 3. Lưu chi tiết đơn hàng
-    for (const item of cart) {
-      await db.query(
-        "INSERT INTO chitietdonhang (ma_don_hang, ma_san_pham, so_luong, gia) VALUES (?, ?, ?, ?)",
-        [ma_don_hang, item.ma_san_pham, item.quantity, item.gia || item.Gia || 0]
-      );
-    }
-
-    res.status(200).json({ message: "Đặt hàng thành công!", ma_don_hang });
-  } catch (err) {
-    console.error("Lỗi khi thêm đơn hàng:", err);
-    res.status(500).json({ message: "Lỗi server!" });
-  }
-  
-  });
-  */
 // API hiển thị thông tin khách hàng (nếu có) trên trang thanh toán
 app.get("/api/khachhang/:email", async (req, res) => {
   const { email } = req.params;
@@ -177,7 +138,68 @@ app.get("/api/khachhang/:email", async (req, res) => {
     res.status(500).json({ message: "Lỗi server!" });
   }
 });
+//api luu don hang tam va chi tiet don hang tam 
+app.post('/api/donhangtam', async (req, res) => {
+  const { total, diachightam, tenkhtam, emailtam, sdttam, phuongthucthanhtoan, soluong, products } = req.body; // Nhận dữ liệu từ client
 
+  try {
+    // Bước 1: Lưu đơn hàng vào bảng donhangtam
+    const insertOrderQuery = 'INSERT INTO donhangtam (total, ngaydathang, trangthai, diachightam, tenkhtam, emailtam, sdttam, phuongthucthanhtoan, soluong) VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?)';
+    const trangthai = "choxuly"; // Trạng thái mặc định
+    const orderResult = await db.query(insertOrderQuery, [total, trangthai, diachightam, tenkhtam, emailtam, sdttam, phuongthucthanhtoan, soluong]);
+    console.log("day la kq id: " + orderResult[0].insertId)
+    const dht_id = orderResult[0].insertId; // Lấy dht_id (id của đơn hàng vừa tạo)
+
+    console.log("day la dht id: " + dht_id)
+    // Bước 2: Duyệt qua từng sản phẩm và thêm vào bảng chitietdonhangtam
+    const queries = products.map(async product => {
+      const { ma_san_pham, so_luong, gia } = product;
+      const tonggia = so_luong * gia; // Tính tổng giá cho sản phẩm
+
+      const query = 'INSERT INTO chitietdonhangtam (ma_don_hang, ma_san_pham, so_luong, tong_gia) VALUES (?, ?, ?, ?)';
+      return await db.query(query, [dht_id, ma_san_pham, so_luong, tonggia]); // Thêm chi tiết sản phẩm
+    });
+
+    // Chờ tất cả các query hoàn thành
+    await Promise.all(queries);
+
+    res.status(201).json({ message: 'Đơn hàng và chi tiết sản phẩm đã được lưu.', orderId: dht_id }); // Trả về order ID
+  } catch (error) {
+    console.error('Lỗi khi xử lý yêu cầu:', error);
+    res.status(500).json({ message: 'Có lỗi xảy ra khi lưu đơn hàng hoặc chi tiết sản phẩm.' });
+  }
+});
+//api don hang
+app.post('/api/donhang', async (req, res) => {
+  const { tongtien, ma_khach_hang, diachigh, phuongthucthanhtoan, soluong, products } = req.body; // Nhận dữ liệu từ client
+
+  try {
+    // Bước 1: Lưu đơn hàng vào bảng donhangtam
+    const insertOrderQuery = 'INSERT INTO donhang (tongtien, ngaydathang , ma_khach_hang, trangthai, diachigh, phuongthucthanhtoan, soluong) VALUES (?, NOW(), ?, ?, ?, ?, ?)';
+    const trangthai = "choxuly"; // Trạng thái mặc định
+    const orderResult = await db.query(insertOrderQuery, [tongtien, ma_khach_hang, trangthai, diachigh, phuongthucthanhtoan, soluong]);
+    console.log("day la kq id: " + orderResult[0].insertId)
+    const madh = orderResult[0].insertId; // Lấy dht_id (id của đơn hàng vừa tạo)
+
+    console.log("day la dht id: " + madh)
+    // Bước 2: Duyệt qua từng sản phẩm và thêm vào bảng chitietdonhangtam
+    const queries = products.map(async product => {
+      const { ma_san_pham, so_luong, gia } = product;
+      const tonggia = so_luong * gia; // Tính tổng giá cho sản phẩm
+
+      const query = 'INSERT INTO chitietdonhang (ma_don_hang, ma_san_pham, so_luong, tong_gia) VALUES (?, ?, ?, ?)';
+      return await db.query(query, [madh, ma_san_pham, so_luong, tonggia]); // Thêm chi tiết sản phẩm
+    });
+
+    // Chờ tất cả các query hoàn thành
+    await Promise.all(queries);
+
+    res.status(201).json({ message: 'Đơn hàng và chi tiết sản phẩm đã được lưu.', orderId: madh }); // Trả về order ID
+  } catch (error) {
+    console.error('Lỗi khi xử lý yêu cầu:', error);
+    res.status(500).json({ message: 'Có lỗi xảy ra khi lưu đơn hàng hoặc chi tiết sản phẩm.' });
+  }
+});
 export default app;
 
 // ✅ LISTEN: dùng khi chạy local (Node)
