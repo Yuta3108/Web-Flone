@@ -86,7 +86,7 @@ function ProductDetail() {
             )}
             {product.img3 && (
               <img
-              src={product.img2.startsWith("http") ? product.img2 : `/${product.img2}`} 
+              src={product.img2.startsWith("http") ? product.img3 : `/${product.img3}`} 
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img3 ? "border-blue-500" : ""}`}
                 onClick={() => setSelectedImage(product.img3)}
