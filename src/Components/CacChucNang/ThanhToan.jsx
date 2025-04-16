@@ -119,10 +119,6 @@ function ThanhToan() {
     const user = JSON.parse(localStorage.getItem("user"));
     const isLoggedIn = user && user.ma_khach_hang;
 
-    const url = isLoggedIn
-      ? "http://localhost:5000/api/donhang"
-      : "http://localhost:5000/api/donhangtam";
-
     const body = isLoggedIn
       ? {
         tongtien: total,
@@ -144,6 +140,33 @@ function ThanhToan() {
       };
 
     try {
+      // Nếu là thanh toán ZaloPay
+      if (formData.paymentMethod === "zalopay") {
+        const response = await fetch("http://localhost:5000/payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({}), // Nếu API không cần gì thêm
+        });
+
+        const result = await response.json();
+        console.log("ZaloPay response:", result);
+
+        if (result.order_url) {
+          window.location.href = result.order_url; // chuyển trang
+          return;
+        } else {
+          alert("Không thể tạo thanh toán qua ZaloPay. Vui lòng thử lại.");
+          return;
+        }
+      }
+
+      // Nếu là COD
+      const url = isLoggedIn
+        ? "http://localhost:5000/api/donhang"
+        : "http://localhost:5000/api/donhangtam";
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
