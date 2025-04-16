@@ -1,19 +1,30 @@
 import dotenv from 'dotenv';
-
-// Chỉ load dotenv nếu đang chạy local
 import path from 'path';
+import express from 'express';
+import cors from 'cors';
+import mysql from 'mysql2/promise';
+import axios from 'axios'; // npm install axios
+import CryptoJS from 'crypto-js'; // npm install crypto-js
+import moment from 'moment'; // npm install moment
+import { redirect } from 'react-router-dom';
 
+// Load environment variables if not in production
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 }
 
-import express from "express";
-import cors from "cors";
-import mysql from "mysql2/promise";
-
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// APP INFO
+const config = {
+  app_id: "2553",
+  key1: "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL",
+  key2: "kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz",
+  endpoint: "https://sb-openapi.zalopay.vn/v2/create"
+};
 
 // Tạo pool kết nối MySQL
 const db = mysql.createPool({
@@ -200,6 +211,40 @@ app.post('/api/donhang', async (req, res) => {
     res.status(500).json({ message: 'Có lỗi xảy ra khi lưu đơn hàng hoặc chi tiết sản phẩm.' });
   }
 });
+
+
+app.post('/payment', async (req, res) => {
+  const embed_data = {
+    redirecturl: "http://localhost:5173/home"
+  };
+
+
+  const items = [{}];
+  const transID = Math.floor(Math.random() * 1000000);
+  const order = {
+    app_id: config.app_id,
+    app_trans_id: `${moment().format('YYMMDD')}_${transID}`, // translation missing: vi.docs.shared.sample_code.comments.app_trans_id
+    app_user: "user123",
+    app_time: Date.now(), // miliseconds
+    item: JSON.stringify(items),
+    embed_data: JSON.stringify(embed_data),
+    amount: 10000,
+    description: `Lazada - Payment for the order #${transID}`,
+    bank_code: "",
+  };
+
+  // appid|app_trans_id|appuser|amount|apptime|embeddata|item
+  const data = config.app_id + "|" + order.app_trans_id + "|" + order.app_user + "|" + order.amount + "|" + order.app_time + "|" + order.embed_data + "|" + order.item;
+  order.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
+
+  try {
+    const result = await axios.post(config.endpoint, null, { params: order });
+    return res.status(200).json(result.data);
+  } catch (error) {
+    console.log(error.message);
+  }
+})
+
 export default app;
 
 // ✅ LISTEN: dùng khi chạy local (Node)
