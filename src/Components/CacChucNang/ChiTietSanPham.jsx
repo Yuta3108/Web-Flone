@@ -24,7 +24,7 @@ function ProductDetail() {
         setLoading(false);
       });
   }, [id]);
-  
+
 
   if (loading) {
     return <div className="text-center text-lg py-6">Đang tải sản phẩm...</div>;
@@ -53,7 +53,10 @@ function ProductDetail() {
   };
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 bg-white shadow-lg rounded-lg">
-      <button onClick={() => navigate(-1)} className="mb-4 text-blue-500 flex items-center">
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-6 w-fit px-2 py-2 bg-gradient-to-t from-Purple-dark from-5% via-Purple-C via-30% to-Purple-L text-white text-lg font-semibold rounded-lg hover:bg-Purple-dark transition duration-200"
+      >
         Quay lại
       </button>
 
@@ -70,7 +73,7 @@ function ProductDetail() {
           <div className="flex justify-center mt-4 space-x-4">
             {product.img1 && (
               <img
-              src={product.img1.startsWith("http") ? product.img1 : `/${product.img1}`}
+                src={product.img1.startsWith("http") ? product.img1 : `/${product.img1}`}
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img1 ? "border-blue" : ""}`}
                 onClick={() => setSelectedImage(product.img1)}
@@ -78,7 +81,7 @@ function ProductDetail() {
             )}
             {product.img2 && (
               <img
-              src={product.img2.startsWith("http") ? product.img2 : `/${product.img2}`}
+                src={product.img2.startsWith("http") ? product.img2 : `/${product.img2}`}
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img2 ? "border-blue" : ""}`}
                 onClick={() => setSelectedImage(product.img2)}
@@ -86,7 +89,10 @@ function ProductDetail() {
             )}
             {product.img3 && (
               <img
-              src={product.img2.startsWith("http") ? product.img2 : `/${product.img2}`} 
+
+
+                src={product.img3.startsWith("http") ? product.img3 : `/${product.img3}`}
+                e6b06acc5fc0a5e1e4cf5979b6178831c26d3882
                 alt="Ảnh khác"
                 className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${selectedImage === product.img3 ? "border-blue-500" : ""}`}
                 onClick={() => setSelectedImage(product.img3)}
