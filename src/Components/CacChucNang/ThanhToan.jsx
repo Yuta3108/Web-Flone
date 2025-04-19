@@ -216,7 +216,7 @@ function ThanhToan() {
             <h3 className="text-xl font-semibold mb-4">Phương thức thanh toán</h3>
             <div className="mb-4">
               <label className="block font-semibold mb-2">Chọn phương thức</label>
-              <select
+              {/* <select
                 name="paymentMethod"
                 value={formData.paymentMethod}
                 onChange={handleChange}
@@ -224,6 +224,26 @@ function ThanhToan() {
               >
                 <option value="cod">Thanh toán khi nhận hàng (COD)</option>
                 <option value="zalopay">ZaloPay</option>
+              </select> */}
+              <select
+                name="paymentMethod"
+                value={formData.paymentMethod}
+                onChange={(e) => {
+                  const selectedMethod = e.target.value;
+                  const user = JSON.parse(localStorage.getItem("user"));
+                  if (selectedMethod === "zalopay" && (!user || !user.ma_khach_hang)) {
+                    alert("Bạn cần đăng nhập để sử dụng ZaloPay.");
+                    setFormData({ ...formData, paymentMethod: "cod" });
+                  } else {
+                    setFormData({ ...formData, paymentMethod: selectedMethod });
+                  }
+                }}
+                className="border w-full px-4 py-2 rounded-md"
+              >
+                <option value="cod">Thanh toán khi nhận hàng (COD)</option>
+                <option value="zalopay" disabled={!JSON.parse(localStorage.getItem("user"))?.ma_khach_hang}>
+                  ZaloPay
+                </option>
               </select>
             </div>
           </div>
