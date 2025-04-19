@@ -216,15 +216,7 @@ function ThanhToan() {
             <h3 className="text-xl font-semibold mb-4">Phương thức thanh toán</h3>
             <div className="mb-4">
               <label className="block font-semibold mb-2">Chọn phương thức</label>
-              {/* <select
-                name="paymentMethod"
-                value={formData.paymentMethod}
-                onChange={handleChange}
-                className="border w-full px-4 py-2 rounded-md"
-              >
-                <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-                <option value="zalopay">ZaloPay</option>
-              </select> */}
+
               <select
                 name="paymentMethod"
                 value={formData.paymentMethod}
