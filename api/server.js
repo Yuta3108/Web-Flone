@@ -217,9 +217,16 @@ app.post('/payment', async (req, res) => {
   const embed_data = {
     redirecturl: "http://localhost:5173/home"
   };
+  const { tongtien, ma_khach_hang, diachigh, phuongthucthanhtoan, soluong, products } = req.body;
 
-
-  const items = [{}];
+  const items = [{
+    "tongtien": tongtien,
+    "ma_khach_hang": ma_khach_hang,
+    "diachigh": diachigh,
+    "phuongthucthanhtoan": phuongthucthanhtoan,
+    "soluong": soluong,
+    "products": products
+  }];
   const transID = Math.floor(Math.random() * 1000000);
   const order = {
     app_id: config.app_id,
@@ -228,9 +235,10 @@ app.post('/payment', async (req, res) => {
     app_time: Date.now(), // miliseconds
     item: JSON.stringify(items),
     embed_data: JSON.stringify(embed_data),
-    amount: 10000,
+    amount: tongtien,
     description: `Lazada - Payment for the order #${transID}`,
     bank_code: "",
+    callback_url: "https://783f-2402-9d80-3be-1a57-1943-511b-fa85-3f64.ngrok-free.app/callback"
   };
 
   // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -239,12 +247,80 @@ app.post('/payment', async (req, res) => {
 
   try {
     const result = await axios.post(config.endpoint, null, { params: order });
+    // console.log(result);
     return res.status(200).json(result.data);
   } catch (error) {
+    res.status(200).json({
+      message: "some thing went wrong",
+    });
     console.log(error.message);
   }
 })
 
+app.post('/callback', async (req, res) => {
+  let result = {};
+
+  try {
+    let dataStr = req.body.data;
+    let reqMac = req.body.mac;
+
+    let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString();
+    console.log("mac =", dataStr);
+
+
+    // kiểm tra callback hợp lệ (đến từ ZaloPay server)
+    if (reqMac !== mac) {
+      // callback không hợp lệ
+      result.return_code = -1;
+      result.return_message = "mac not equal";
+      console.log("đã hủy");
+    }
+    else {
+      // thanh toán thành công
+      // merchant cập nhật trạng thái cho đơn hàng
+      let dataJson = JSON.parse(dataStr, config.key2);
+      const itemData = JSON.parse(dataJson.item)[0];
+      console.log(itemData);
+      // console.log("update order's status = success where app_trans_id =", dataJson["app_trans_id"]);
+
+      const insertQuery = `INSERT INTO donhang 
+        (ngaydathang, ma_khach_hang, phuongthucthanhtoan, soluong, tongtien, trangthai, diachigh, app_trans_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+      // Chèn dữ liệu vào cơ sở dữ liệu
+      try {
+        await db.execute(insertQuery, [
+          new Date(),                    // Ngày đặt hàng hiện tại
+          itemData["ma_khach_hang"],    // Mã khách hàng từ item
+          itemData["phuongthucthanhtoan"],// Phương thức thanh toán từ item
+          itemData["soluong"],           // Số lượng từ item
+          itemData["tongtien"],          // Tổng tiền từ item
+          'success',                     // Trạng thái
+          itemData["diachigh"],         // Địa chỉ giao hàng từ item
+          dataJson["app_trans_id"]     // app_trans_id từ callback
+        ]);
+
+        result.return_code = 1;
+        result.return_message = "success";
+      } catch (dbError) {
+        console.error("Lỗi khi chèn dữ liệu vào database:", dbError);
+        result.return_code = 0;
+        result.return_message = "Lỗi database: " + dbError.message;
+      }
+
+
+
+      result.return_code = 1;
+      result.return_message = "success";
+    }
+  } catch (ex) {
+    result.return_code = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
+    result.return_message = ex.message;
+  }
+
+  // thông báo kết quả cho ZaloPay server
+  res.json(result);
+})
 export default app;
 
 // ✅ LISTEN: dùng khi chạy local (Node)
