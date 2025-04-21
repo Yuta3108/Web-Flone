@@ -279,8 +279,7 @@ app.post('/callback', async (req, res) => {
       // thanh toán thành công
       // merchant cập nhật trạng thái cho đơn hàng
       let dataJson = JSON.parse(dataStr, config.key2);
-      console.log(dataJson);
-      console.log("==========================");
+
 
       const itemData = JSON.parse(dataJson.item)[0];
       console.log(itemData);
@@ -307,12 +306,10 @@ app.post('/callback', async (req, res) => {
         // Lấy ID của đơn hàng vừa được chèn
         const [rows] = await db.execute("SELECT LAST_INSERT_ID() as ma_don_hang");
         const maDonHang = rows[0].ma_don_hang;
-        console.log("madonhang= " + maDonHang);
 
 
         // Lặp qua các sản phẩm trong đơn hàng và chèn vào bảng chitietdonhang
         const products = itemData.products;
-        console.log("products= " + products);
         for (const product of products) {
           const insertChiTietQuery = `
             INSERT INTO chitietdonhang (ma_don_hang, ma_san_pham, so_luong, tong_gia)
