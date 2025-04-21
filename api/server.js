@@ -238,7 +238,7 @@ app.post('/payment', async (req, res) => {
     amount: tongtien,
     description: `Lazada - Payment for the order #${transID}`,
     bank_code: "",
-    callback_url: "https://a088-2402-800-6314-18c4-8938-923-f549-d013.ngrok-free.app/callback"
+    callback_url: "https://16a9-2405-4802-80f8-d4f0-655b-b9d2-4c7b-ab12.ngrok-free.app/callback"
   };
 
   // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -344,61 +344,60 @@ app.post('/callback', async (req, res) => {
 })
 
 app.get('/api/zalopay/callback', async (req, res) => {
-  const { apptransid, amount, appid, bankcode, checksum, discountamount, pmcid, status } = req.query;
-  console.log("req.query", req.query);
+  const { apptransid, status } = req.query;
 
-  // Kiểm tra trạng thái thanh toán
   if (status == 1) {
-    // Thanh toán thành công
-    try {
-      // Sử dụng câu lệnh JOIN để lấy thông tin từ cả hai bảng
-      const [results] = await db.execute(
-        `SELECT * FROM donhang qlbh 
-         JOIN chitietdonhang cttdh ON qlbh.madonhang = cttdh.ma_don_hang 
-         WHERE qlbh.app_trans_id = ?`,
-        [apptransid]
-      );
-
-      if (results.length > 0) {
-        // Tạo một đối tượng chứa thông tin đơn hàng và chi tiết đơn hàng
-        const donHang = {
-          ...results[0], // Lấy thông tin từ bảng donhang
-        };
-
-        const chiTietDonHang = results.map(result => ({
-          ma_chi_tiet_don_hang: result.ma_chi_tiet_don_hang,
-          so_luong: result.so_luong,
-          tong_gia: result.tong_gia,
-          ma_don_hang: result.ma_don_hang,
-          ma_san_pham: result.ma_san_pham
-        }));
-
-        // Trả về dữ liệu cho client
-        res.json({
-          message: "Thanh toán thành công",
-          donHang: donHang,
-          chiTietDonHang: chiTietDonHang
-        });
-      } else {
-        // Không tìm thấy đơn hàng với app_trans_id tương ứng
-        res.status(404).json({ message: "Không tìm thấy đơn hàng" });
-      }
-    } catch (error) {
-      console.error("Lỗi khi truy vấn database:", error);
-      // Chuyển hướng về trang chủ nếu có lỗi database
-      return res.status(500).json({
-        message: "Lỗi database",
-        error: error.message // Thêm thông tin chi tiết về lỗi (tùy chọn)
-      });
-    }
+    return res.redirect(`http://localhost:5173/donhang?zalopay=true&apptransid=${apptransid}`);
   } else {
-    // Thanh toán không thành công
     return res.redirect('http://localhost:5173/home');
   }
 });
 
+app.get('/api/zalopay/detail', async (req, res) => {
+  const { apptransid } = req.query;
 
+  try {
+    const [results] = await db.execute(
+      `SELECT 
+          qlbh.*, 
+          cttdh.ma_chi_tiet_don_hang, cttdh.so_luong, cttdh.tong_gia, cttdh.ma_san_pham,
+          kh.ten_khach_hang, kh.email, kh.sdt
+       FROM donhang qlbh 
+       JOIN chitietdonhang cttdh ON qlbh.madonhang = cttdh.ma_don_hang 
+       JOIN khachhang kh ON qlbh.ma_khach_hang = kh.ma_khach_hang
+       WHERE qlbh.app_trans_id = ?`,
+      [apptransid]
+    );
 
+    if (results.length > 0) {
+      const donHang = {
+        madonhang: results[0].madonhang,
+        ngaydathang: results[0].ngaydathang,
+        phuongthucthanhtoan: results[0].phuongthucthanhtoan,
+        tongtien: results[0].tongtien,
+        diachi: results[0].diachigh,
+        app_trans_id: results[0].app_trans_id,
+        ten_khach_hang: results[0].ten_khach_hang,
+        email: results[0].email,
+        sdt: results[0].sdt,
+      };
+
+      const chiTietDonHang = results.map(result => ({
+        ma_chi_tiet_don_hang: result.ma_chi_tiet_don_hang,
+        so_luong: result.so_luong,
+        tong_gia: result.tong_gia,
+        ma_san_pham: result.ma_san_pham
+      }));
+
+      res.json({ donHang, chiTietDonHang });
+    } else {
+      res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+  } catch (error) {
+    console.error("Lỗi khi truy vấn đơn hàng chi tiết:", error);
+    res.status(500).json({ message: "Lỗi server", error: error.message });
+  }
+});
 export default app;
 
 // ✅ LISTEN: dùng khi chạy local (Node)

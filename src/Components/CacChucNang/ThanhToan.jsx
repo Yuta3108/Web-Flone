@@ -147,7 +147,15 @@ function ThanhToan() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({}), // Nếu API không cần gì thêm
+          body: JSON.stringify({
+            tongtien: total,
+            ma_khach_hang: user.ma_khach_hang,
+            diachigh: formData.address,
+            phuongthucthanhtoan: formData.paymentMethod,
+            soluong,
+            products,
+          }), // Nếu API không cần gì thêm
+
         });
 
         const result = await response.json();
@@ -223,17 +231,31 @@ function ThanhToan() {
                 onChange={(e) => {
                   const selectedMethod = e.target.value;
                   const user = JSON.parse(localStorage.getItem("user"));
-                  if (selectedMethod === "zalopay" && (!user || !user.ma_khach_hang)) {
-                    alert("Bạn cần đăng nhập để sử dụng ZaloPay.");
-                    setFormData({ ...formData, paymentMethod: "cod" });
-                  } else {
-                    setFormData({ ...formData, paymentMethod: selectedMethod });
+                  const total = calculateTotalPrice();
+
+                  if (selectedMethod === "zalopay") {
+                    if (!user || !user.ma_khach_hang) {
+                      alert("Bạn cần đăng nhập để sử dụng ZaloPay.");
+                      setFormData({ ...formData, paymentMethod: "cod" });
+                      return;
+                    }
+
+                    if (total > 10000000) {
+                      alert("Đơn hàng bạn đã vượt quá 10 triệu không thể thanh toán ZaloPay, bạn hãy thanh toán COD hoặc ra trung tâm để thanh toán.");
+                      setFormData({ ...formData, paymentMethod: "cod" });
+                      return;
+                    }
                   }
+
+                  setFormData({ ...formData, paymentMethod: selectedMethod });
                 }}
                 className="border w-full px-4 py-2 rounded-md"
               >
                 <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-                <option value="zalopay" disabled={!JSON.parse(localStorage.getItem("user"))?.ma_khach_hang}>
+                <option
+                  value="zalopay"
+                  disabled={!JSON.parse(localStorage.getItem("user"))?.ma_khach_hang}
+                >
                   ZaloPay
                 </option>
               </select>
