@@ -6,7 +6,7 @@ import mysql from 'mysql2/promise';
 import axios from 'axios'; // npm install axios
 import CryptoJS from 'crypto-js'; // npm install crypto-js
 import moment from 'moment'; // npm install moment
-import { redirect } from 'react-router-dom';
+import { data, redirect } from 'react-router-dom';
 
 // Load environment variables if not in production
 if (process.env.NODE_ENV !== 'production') {
@@ -215,7 +215,7 @@ app.post('/api/donhang', async (req, res) => {
 
 app.post('/payment', async (req, res) => {
   const embed_data = {
-    redirecturl: "http://localhost:5173/home"
+    redirecturl: "http://localhost:5173/api/zalopay/callback"
   };
   const { tongtien, ma_khach_hang, diachigh, phuongthucthanhtoan, soluong, products } = req.body;
 
@@ -238,7 +238,7 @@ app.post('/payment', async (req, res) => {
     amount: tongtien,
     description: `Lazada - Payment for the order #${transID}`,
     bank_code: "",
-    callback_url: "https://783f-2402-9d80-3be-1a57-1943-511b-fa85-3f64.ngrok-free.app/callback"
+    callback_url: "https://a088-2402-800-6314-18c4-8938-923-f549-d013.ngrok-free.app/callback"
   };
 
   // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -265,7 +265,7 @@ app.post('/callback', async (req, res) => {
     let reqMac = req.body.mac;
 
     let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString();
-    console.log("mac =", dataStr);
+    //console.log("mac =", dataStr);
 
 
     // kiểm tra callback hợp lệ (đến từ ZaloPay server)
@@ -279,9 +279,13 @@ app.post('/callback', async (req, res) => {
       // thanh toán thành công
       // merchant cập nhật trạng thái cho đơn hàng
       let dataJson = JSON.parse(dataStr, config.key2);
+      console.log(dataJson);
+      console.log("==========================");
+
       const itemData = JSON.parse(dataJson.item)[0];
       console.log(itemData);
-      // console.log("update order's status = success where app_trans_id =", dataJson["app_trans_id"]);
+
+      //console.log("update order's status = success where app_trans_id =", dataJson["app_trans_id"]);
 
       const insertQuery = `INSERT INTO donhang 
         (ngaydathang, ma_khach_hang, phuongthucthanhtoan, soluong, tongtien, trangthai, diachigh, app_trans_id) 
@@ -290,15 +294,37 @@ app.post('/callback', async (req, res) => {
       // Chèn dữ liệu vào cơ sở dữ liệu
       try {
         await db.execute(insertQuery, [
-          new Date(),                    // Ngày đặt hàng hiện tại
-          itemData["ma_khach_hang"],    // Mã khách hàng từ item
-          itemData["phuongthucthanhtoan"],// Phương thức thanh toán từ item
-          itemData["soluong"],           // Số lượng từ item
-          itemData["tongtien"],          // Tổng tiền từ item
-          'success',                     // Trạng thái
-          itemData["diachigh"],         // Địa chỉ giao hàng từ item
-          dataJson["app_trans_id"]     // app_trans_id từ callback
+          new Date(),                                 // Ngày đặt hàng hiện tại
+          itemData["ma_khach_hang"],                   // Mã khách hàng từ item
+          itemData["phuongthucthanhtoan"],           // Phương thức thanh toán từ item
+          itemData["soluong"],                         // Số lượng từ item
+          itemData["tongtien"],                        // Tổng tiền từ item
+          'success',                                   // Trạng thái
+          itemData["diachigh"],                      // Địa chỉ giao hàng từ item
+          dataJson["app_trans_id"]                     // app_trans_id từ callback
         ]);
+
+        // Lấy ID của đơn hàng vừa được chèn
+        const [rows] = await db.execute("SELECT LAST_INSERT_ID() as ma_don_hang");
+        const maDonHang = rows[0].ma_don_hang;
+        console.log("madonhang= " + maDonHang);
+
+
+        // Lặp qua các sản phẩm trong đơn hàng và chèn vào bảng chitietdonhang
+        const products = itemData.products;
+        console.log("products= " + products);
+        for (const product of products) {
+          const insertChiTietQuery = `
+            INSERT INTO chitietdonhang (ma_don_hang, ma_san_pham, so_luong, tong_gia)
+            VALUES (?, ?, ?, ?)
+          `;
+          await db.execute(insertChiTietQuery, [
+            maDonHang,
+            product.ma_san_pham,
+            product.so_luong,
+            product.gia
+          ]);
+        }
 
         result.return_code = 1;
         result.return_message = "success";
@@ -307,8 +333,6 @@ app.post('/callback', async (req, res) => {
         result.return_code = 0;
         result.return_message = "Lỗi database: " + dbError.message;
       }
-
-
 
       result.return_code = 1;
       result.return_message = "success";
@@ -321,6 +345,63 @@ app.post('/callback', async (req, res) => {
   // thông báo kết quả cho ZaloPay server
   res.json(result);
 })
+
+app.get('/api/zalopay/callback', async (req, res) => {
+  const { apptransid, amount, appid, bankcode, checksum, discountamount, pmcid, status } = req.query;
+  console.log("req.query", req.query);
+
+  // Kiểm tra trạng thái thanh toán
+  if (status == 1) {
+    // Thanh toán thành công
+    try {
+      // Sử dụng câu lệnh JOIN để lấy thông tin từ cả hai bảng
+      const [results] = await db.execute(
+        `SELECT * FROM donhang qlbh 
+         JOIN chitietdonhang cttdh ON qlbh.madonhang = cttdh.ma_don_hang 
+         WHERE qlbh.app_trans_id = ?`,
+        [apptransid]
+      );
+
+      if (results.length > 0) {
+        // Tạo một đối tượng chứa thông tin đơn hàng và chi tiết đơn hàng
+        const donHang = {
+          ...results[0], // Lấy thông tin từ bảng donhang
+        };
+
+        const chiTietDonHang = results.map(result => ({
+          ma_chi_tiet_don_hang: result.ma_chi_tiet_don_hang,
+          so_luong: result.so_luong,
+          tong_gia: result.tong_gia,
+          ma_don_hang: result.ma_don_hang,
+          ma_san_pham: result.ma_san_pham
+        }));
+
+        // Trả về dữ liệu cho client
+        res.json({
+          message: "Thanh toán thành công",
+          donHang: donHang,
+          chiTietDonHang: chiTietDonHang
+        });
+      } else {
+        // Không tìm thấy đơn hàng với app_trans_id tương ứng
+        res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+      }
+    } catch (error) {
+      console.error("Lỗi khi truy vấn database:", error);
+      // Chuyển hướng về trang chủ nếu có lỗi database
+      return res.status(500).json({
+        message: "Lỗi database",
+        error: error.message // Thêm thông tin chi tiết về lỗi (tùy chọn)
+      });
+    }
+  } else {
+    // Thanh toán không thành công
+    return res.redirect('http://localhost:5173/home');
+  }
+});
+
+
+
 export default app;
 
 // ✅ LISTEN: dùng khi chạy local (Node)
