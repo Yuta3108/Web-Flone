@@ -238,7 +238,7 @@ app.post('/payment', async (req, res) => {
     amount: tongtien,
     description: `Lazada - Payment for the order #${transID}`,
     bank_code: "",
-    callback_url: "https://16a9-2405-4802-80f8-d4f0-655b-b9d2-4c7b-ab12.ngrok-free.app/callback"
+    callback_url: "https://nhom5chude2.vercel.app/api/zalopay/callback"
   };
 
   // appid|app_trans_id|appuser|amount|apptime|embeddata|item
