@@ -13,7 +13,7 @@ function DonHang() {
 
     useEffect(() => {
         if (isZaloPay && appTransId) {
-            fetch(`http://localhost:5000/api/zalopay/detail?apptransid=${appTransId}`)
+            fetch(`https://nhom5chude2.vercel.app/api/zalopay/detail?apptransid=${appTransId}`)
                 .then((res) => res.json())
                 .then((data) => setZalopayData(data))
                 .catch((err) => console.error("Lỗi khi lấy dữ liệu ZaloPay:", err));
