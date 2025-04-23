@@ -43,7 +43,7 @@ function ThanhToan() {
     const fetchCustomerData = async () => {
       if (!formData.email) return;
       try {
-        const response = await fetch(`http://localhost:5173/api/khachhang/${formData.email}`);
+        const response = await fetch(`https://nhom5chude2.vercel.app/api/khachhang/${formData.email}`);
         if (response.ok) {
           const customerData = await response.json();
           setFormData((prevData) => ({
@@ -119,10 +119,6 @@ function ThanhToan() {
     const user = JSON.parse(localStorage.getItem("user"));
     const isLoggedIn = user && user.ma_khach_hang;
 
-    const url = isLoggedIn
-      ? "http://localhost:5000/api/donhang"
-      : "http://localhost:5000/api/donhangtam";
-
     const body = isLoggedIn
       ? {
         tongtien: total,
@@ -144,6 +140,41 @@ function ThanhToan() {
       };
 
     try {
+      // Nếu là thanh toán ZaloPay
+      if (formData.paymentMethod === "zalopay") {
+        const response = await fetch("https://nhom5chude2.vercel.app/payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            tongtien: total,
+            ma_khach_hang: user.ma_khach_hang,
+            diachigh: formData.address,
+            phuongthucthanhtoan: formData.paymentMethod,
+            soluong,
+            products,
+          }), // Nếu API không cần gì thêm
+
+        });
+
+        const result = await response.json();
+        console.log("ZaloPay response:", result);
+
+        if (result.order_url) {
+          window.location.href = result.order_url; // chuyển trang
+          return;
+        } else {
+          alert("Không thể tạo thanh toán qua ZaloPay. Vui lòng thử lại.");
+          return;
+        }
+      }
+
+      // Nếu là COD
+      const url = isLoggedIn
+        ? "https://nhom5chude2.vercel.app/api/donhang"
+        : "https://nhom5chude2.vercel.app/api/donhangtam";
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -193,14 +224,40 @@ function ThanhToan() {
             <h3 className="text-xl font-semibold mb-4">Phương thức thanh toán</h3>
             <div className="mb-4">
               <label className="block font-semibold mb-2">Chọn phương thức</label>
+
               <select
                 name="paymentMethod"
                 value={formData.paymentMethod}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const selectedMethod = e.target.value;
+                  const user = JSON.parse(localStorage.getItem("user"));
+                  const total = calculateTotalPrice();
+
+                  if (selectedMethod === "zalopay") {
+                    if (!user || !user.ma_khach_hang) {
+                      alert("Bạn cần đăng nhập để sử dụng ZaloPay.");
+                      setFormData({ ...formData, paymentMethod: "cod" });
+                      return;
+                    }
+
+                    if (total > 10000000) {
+                      alert("Đơn hàng bạn đã vượt quá 10 triệu không thể thanh toán ZaloPay, bạn hãy thanh toán COD hoặc ra trung tâm để thanh toán.");
+                      setFormData({ ...formData, paymentMethod: "cod" });
+                      return;
+                    }
+                  }
+
+                  setFormData({ ...formData, paymentMethod: selectedMethod });
+                }}
                 className="border w-full px-4 py-2 rounded-md"
               >
                 <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-                <option value="zalopay">ZaloPay</option>
+                <option
+                  value="zalopay"
+                  disabled={!JSON.parse(localStorage.getItem("user"))?.ma_khach_hang}
+                >
+                  ZaloPay
+                </option>
               </select>
             </div>
           </div>
