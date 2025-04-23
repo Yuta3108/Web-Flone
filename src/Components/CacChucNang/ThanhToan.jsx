@@ -5,6 +5,7 @@ import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { NODE } from "../../api";
 function ThanhToan() {
   const [formData, setFormData] = useState({
     name: "",
@@ -43,7 +44,7 @@ function ThanhToan() {
     const fetchCustomerData = async () => {
       if (!formData.email) return;
       try {
-        const response = await fetch(`https://nhom5chude2.vercel.app/api/khachhang/${formData.email}`);
+        const response = await fetch(`${NODE}/api/khachhang/${formData.email}`);
         if (response.ok) {
           const customerData = await response.json();
           setFormData((prevData) => ({
@@ -142,7 +143,7 @@ function ThanhToan() {
     try {
       // Nếu là thanh toán ZaloPay
       if (formData.paymentMethod === "zalopay") {
-        const response = await fetch("https://nhom5chude2.vercel.app/payment", {
+        const response = await fetch("${NODE}/api/payment", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -172,8 +173,8 @@ function ThanhToan() {
 
       // Nếu là COD
       const url = isLoggedIn
-        ? "https://nhom5chude2.vercel.app/api/donhang"
-        : "https://nhom5chude2.vercel.app/api/donhangtam";
+        ? "${NODE}/api/donhang"
+        : "${NODE}/api/donhangtam";
 
       const response = await fetch(url, {
         method: "POST",
