@@ -213,7 +213,7 @@ app.post('/api/donhang', async (req, res) => {
 });
 
 
-app.post('/payment', async (req, res) => {
+app.post('/api/payment', async (req, res) => {
   const embed_data = {
     redirecturl: "https://nhom5chude2.vercel.app/api/zalopay/callback"
   };
@@ -238,7 +238,7 @@ app.post('/payment', async (req, res) => {
     amount: tongtien,
     description: `Lazada - Payment for the order #${transID}`,
     bank_code: "",
-    callback_url: "https://nhom5chude2.vercel.app/api/zalopay/callback"
+    callback_url: "https://nhom5chude2.vercel.app/api/callback"
   };
 
   // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -257,7 +257,7 @@ app.post('/payment', async (req, res) => {
   }
 })
 
-app.post('/callback', async (req, res) => {
+app.post('/api/callback', async (req, res) => {
   let result = {};
 
   try {

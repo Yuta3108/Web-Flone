@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import { NODE } from "../../api";
 function DonHang() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ function DonHang() {
 
     useEffect(() => {
         if (isZaloPay && appTransId) {
-            fetch(`https://nhom5chude2.vercel.app/api/zalopay/detail?apptransid=${appTransId}`)
+            fetch(`${NODE}/api/zalopay/detail?apptransid=${appTransId}`)
                 .then((res) => res.json())
                 .then((data) => setZalopayData(data))
                 .catch((err) => console.error("Lỗi khi lấy dữ liệu ZaloPay:", err));
