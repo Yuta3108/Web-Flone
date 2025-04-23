@@ -143,7 +143,7 @@ function ThanhToan() {
     try {
       // Nếu là thanh toán ZaloPay
       if (formData.paymentMethod === "zalopay") {
-        const response = await fetch("${NODE}/api/payment", {
+        const response = await fetch(`${NODE}/api/payment`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -173,8 +173,8 @@ function ThanhToan() {
 
       // Nếu là COD
       const url = isLoggedIn
-        ? "${NODE}/api/donhang"
-        : "${NODE}/api/donhangtam";
+        ? `${NODE}/api/donhang`
+        : `${NODE}/api/donhangtam`;
 
       const response = await fetch(url, {
         method: "POST",
