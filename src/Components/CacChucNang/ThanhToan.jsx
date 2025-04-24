@@ -44,7 +44,7 @@ function ThanhToan() {
     const fetchCustomerData = async () => {
       if (!formData.email) return;
       try {
-        const response = await fetch(`${NODE}/api/khachhang/${formData.email}`);
+        const response = await fetch(`http://localhost:5000/api/khachhang/${formData.email}`);
         if (response.ok) {
           const customerData = await response.json();
           setFormData((prevData) => ({
@@ -143,7 +143,7 @@ function ThanhToan() {
     try {
       // Nếu là thanh toán ZaloPay
       if (formData.paymentMethod === "zalopay") {
-        const response = await fetch(`${NODE}/api/payment`, {
+        const response = await fetch(`http://localhost:5000/api/payment`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -173,8 +173,8 @@ function ThanhToan() {
 
       // Nếu là COD
       const url = isLoggedIn
-        ? `${NODE}/api/donhang`
-        : `${NODE}/api/donhangtam`;
+        ? `http://localhost:5000/api/donhang`
+        : `http://localhost:5000/api/donhangtam`;
 
       const response = await fetch(url, {
         method: "POST",
