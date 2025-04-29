@@ -61,7 +61,7 @@ function SearchResultModal({ results = [], onClose }) {
                                     onClick={() => handleClickProduct(product.ma_san_pham)}
                                 >
                                     <img
-                                        src={`${NODE}/${product.img}`}
+                                        src={`${product.img}`}
                                         alt={product.ten_sp || "Sản phẩm"}
                                         className="w-24 h-24 object-cover mb-2"
                                     />
