@@ -23,15 +23,6 @@ export default function DonHangPage() {
     fetchOrders();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Xác nhận xoá đơn hàng?")) return;
-    try {
-      await fetch(`${SPRING}/api/donhang/${id}`, { method: 'DELETE' });
-      fetchOrders();
-    } catch (err) {
-      alert("Xoá thất bại.");
-    }
-  };
 
   const handleEdit = (order) => {
     setEditOrder({ ...order, trangThaiCu: order.trangThai });
@@ -106,7 +97,7 @@ export default function DonHangPage() {
                       <td className="p-3">{order.trangThai}</td>
                       <td className="p-3 space-x-2">
                         <button onClick={() => handleEdit(order)} className="text-yellow-500">Sửa</button>
-                        <button onClick={() => handleDelete(order.maDonHang)} className="text-red-500">Xóa</button>
+                      
                       </td>
                     </tr>
                   ))}
