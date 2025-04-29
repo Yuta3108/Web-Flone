@@ -34,11 +34,20 @@ export default function DonHangPage() {
   };
 
   const handleEdit = (order) => {
-    setEditOrder({ ...order });
+    setEditOrder({ ...order, trangThaiCu: order.trangThai });
     setModalOpen(true);
   };
-
+  
   const handleSave = async () => {
+    if (editOrder.trangThaiCu === "ĐANG_GIAO" && editOrder.trangThai === "CHỜ_XỬ_LÝ") {
+      alert("Đơn hàng đang giao không thể chuyển lại trạng thái chờ xử lý.");
+      return;
+    }
+    if (editOrder.trangThaiCu === "ĐÃ_GIAO" && (editOrder.trangThai === "ĐANG_GIAO" || editOrder.trangThai === "CHỜ_XỬ_LÝ")) {
+      alert("Đơn hàng đã giao không thể quay lại trạng thái đang giao hoặc chờ xử lý.");
+      return;
+    }
+  
     try {
       const res = await fetch(`${SPRING}/api/donhang/${editOrder.maDonHang}`, {
         method: 'PUT',
@@ -55,7 +64,8 @@ export default function DonHangPage() {
       alert("Lỗi cập nhật.");
     }
   };
-
+  
+  
   const formatDate = (iso) => {
     if (!iso) return "";
     return new Date(iso).toLocaleDateString("vi-VN");
@@ -78,7 +88,6 @@ export default function DonHangPage() {
                     <th className="p-3 text-left">Khách hàng</th>
                     <th className="p-3 text-left">Tổng tiền</th>
                     <th className="p-3 text-left">Số lượng</th>
-
                     <th className="p-3 text-left">Ngày đặt</th>
                     <th className="p-3 text-left">Thanh toán</th>
                     <th className="p-3 text-left">Trạng thái</th>
@@ -92,7 +101,6 @@ export default function DonHangPage() {
                       <td className="p-3">{order.khachHang?.tenKhachHang || "Ẩn danh"}</td>
                       <td className="p-3">{order.tongTien?.toLocaleString()} đ</td>
                       <td className="p-3">{order.soLuong}</td>
-                     
                       <td className="p-3">{formatDate(order.ngayDatHang)}</td>
                       <td className="p-3">{order.phuongThucThanhToan}</td>
                       <td className="p-3">{order.trangThai}</td>
@@ -115,55 +123,25 @@ export default function DonHangPage() {
             {modalOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                 <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
-                  <h2 className="text-xl font-semibold mb-4">Chỉnh sửa đơn hàng</h2>
-                  <input
-                    type="text"
-                    placeholder="Tên khách hàng"
-                    value={editOrder.tenKhachHang || ""}
-                    onChange={(e) => setEditOrder({ ...editOrder, tenKhachHang: e.target.value })}
-                    className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Tổng tiền"
-                    value={editOrder.tongTien || ""}
-                    onChange={(e) => setEditOrder({ ...editOrder, tongTien: Number(e.target.value) })}
-                    className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Số lượng"
-                    value={editOrder.soLuong || ""}
-                    onChange={(e) => setEditOrder({ ...editOrder, soLuong: Number(e.target.value) })}
-                    className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Địa chỉ giao"
-                    value={editOrder.diaChiGiaoHang || ""}
-                    onChange={(e) => setEditOrder({ ...editOrder, diaChiGiaoHang: e.target.value })}
-                    className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
-                  />
+                  <h2 className="text-xl font-semibold mb-4">Cập nhật trạng thái đơn hàng</h2>
+                  
                   <select
                     value={editOrder.trangThai}
                     onChange={(e) => setEditOrder({ ...editOrder, trangThai: e.target.value })}
-                    className="w-full p-2 mb-3 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
+                    className="w-full p-2 mb-4 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
                   >
                     <option value="CHỜ_XỬ_LÝ">CHỜ_XỬ_LÝ</option>
                     <option value="ĐANG_GIAO">ĐANG_GIAO</option>
                     <option value="ĐÃ_GIAO">ĐÃ_GIAO</option>
-                    <option value="ĐÃ_HUỶ">ĐÃ_HUỶ</option>
                   </select>
-                  <input
-                    type="text"
-                    placeholder="Phương thức thanh toán"
-                    value={editOrder.phuongThucThanhToan || ""}
-                    onChange={(e) => setEditOrder({ ...editOrder, phuongThucThanhToan: e.target.value })}
-                    className="w-full p-2 mb-4 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
-                  />
+
                   <div className="flex justify-end space-x-2">
-                    <button onClick={() => setModalOpen(false)} className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">Hủy</button>
-                    <button onClick={handleSave} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Lưu</button>
+                    <button onClick={() => setModalOpen(false)} className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded">
+                      Hủy
+                    </button>
+                    <button onClick={handleSave} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                      Lưu
+                    </button>
                   </div>
                 </div>
               </div>
